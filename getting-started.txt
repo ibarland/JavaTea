@@ -1,4 +1,8 @@
 Hi Joel --
+You can (re)find this file at 
+    git@github.com:ibarland/JavaTea.git
+and looking at the (public) contents of getting-started.txt.
+
 
 - Using git:
 
