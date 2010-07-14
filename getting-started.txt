@@ -3,9 +3,10 @@ Hi Joel --
 - Using git:
 
   - One-time setup:
-      git git@github.com:ibarland/JavaTea.git
+      git clone git@github.com:ibarland/JavaTea.git
     (This will create a directory JavaTea inside the current directory)
     Also, you can set your username and email as specified in tutorials (below).
+
   - Workflow:
       [cd to JavaTea]
       git pull
