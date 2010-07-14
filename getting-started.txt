@@ -1,0 +1,68 @@
+Hi Joel --
+
+- Using git:
+
+  - One-time setup:
+      git git@github.com:ibarland/JavaTea.git
+    (This will create a directory JavaTea inside the current directory)
+    Also, you can set your username and email as specified in tutorials (below).
+  - Workflow:
+      [cd to JavaTea]
+      git pull
+      [make changes]
+      git commit -a 
+      git pull
+      git push
+
+    Both of the 'git pull's are precautionary -- just to make sure
+    you have the most recent version before making changes.
+
+    If you create new files, you have to tell git that they're part of 
+    the project (and not just some temp file or generated file);
+    use "git add" to do this.
+
+  - I realized the obvious way to move things to the ITEC120 account:
+    it will itself be a git repository;
+    this will let us each push our local repository to the 120 repository
+      (to test via web).  (Yeah, it's bad to have our 'live' site
+      also be used for development/testing, but should be fine since nobody 
+      will use the live site until classes start.)
+     
+
+- Of the many 'git' tutorials, the one I liked best myself:
+      http://book.git-scm.com/
+  (I've only gone through the 'basic usage', and that seems fine;
+  you can ignore the sections on branching/merging as we won't be doing that.)
+
+- The password for the SQL account (CoderTea@ITEC) is the same
+  as for the Itec120 account.
+
+
+- ssh:
+# How to set up passwordless ssh/scp from machine Src to machine Dest:
+
+# On machine Src:
+#
+pushd ~/.ssh
+if (! -e id_dsa.pub) ssh-keygen -t dsa  -P ""         -f id_dsa
+#             Those flags mean: -t type -P passphrase -f file   -C comment
+#  ln -s id_dsa.pub id_dsa-$user-at-`hostname`.pub  #optional
+popd
+
+
+# On machine Dest:
+# 
+pushd ~/.ssh
+scp  Src:.ssh/id_dsa.pub  id_dsa-ian-at-Src.pub
+# This scp will require still typing the password.
+touch authorized_keys2
+cat id_dsa-ian-at-Src.pub  >>! authorized_keys2
+rm  id_dsa-ian-at-Src.pub
+chmod 600 authorized_keys2
+# Won't work if that file is writable by group or other!
+popd
+
+
+(You may also want to confirm that authorized_keys2 is readable,
+*and* not writable by group, other.)
+
