@@ -1,0 +1,44 @@
+<html>
+ <head><title>JavaTea</title>
+ <script language="javascript">
+  function addRow() {
+   //var ele = document.createElement("input");
+   //ele.setAttribute("type", "text");
+   //ele.setAttribute("name", "temp");
+
+   //var doc = document.getElementById("cases");
+
+   //doc.appendChild(ele);
+   var doc = document.getElementById("cases");
+
+   var a = (document.getElementsByTagName("input").length - 2) / 2 + 1;
+    
+
+   doc.innerHTML += "double( <input type=\"text\" name=\"field"+a+"\"/>) == <input type=\"text\" name=\"result"+a+"\"/><br/>";
+  }
+ </script>
+ </head>
+ <body>
+  <div align="center">
+   <a href="/JavaTea/">Home</a>&nbsp;&nbsp;&nbsp;
+   <a href="/JavaTea/FAQ.html">FAQ</a>&nbsp;&nbsp;&nbsp;
+   <a href="/JavaTea/login.html">Login</a>
+  </div>
+  <table align="center" width="70%">
+   <tr><td><p>public int double(int number)</p><br/>
+    <p>The function double takes in any integer and returns double its value</p>
+   </td></tr>
+   <tr><td>
+    <form action="/cgi-bin/j0001.py" method="post">
+     Add test cases with this button.&nbsp;&nbsp;&nbsp;
+     <input type="button" value="Add" onclick="addRow()"/><br/>
+     <span id="cases">double( <input type="text" name="field1"/>) == 
+      <input type="text" name="result1"/><br/>
+     </span>
+     <input type="submit" value="Submit"/>
+    </form>  
+   </td></tr>
+  </table>
+ </body>
+</html>
+
