@@ -3,8 +3,8 @@
  <body>
   <div align="center">
    <a href="/JavaTea">Home</a>&nbsp;&nbsp;&nbsp;
-   <a href="FAQ.html">FAQ</a>&nbsp;&nbsp;&nbsp;
-   <a href="">Login</a>
+   <a href="FAQ.php">FAQ</a>&nbsp;&nbsp;&nbsp;
+   <a href="login.php">Login</a>
   </div>
  </body>
 </html>
