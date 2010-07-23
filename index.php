@@ -1,11 +1,7 @@
-<html>
- <head><title>JavaTea</title></head>
- <body>
-  <div align="center">
-   <a href="">Home</a>&nbsp;&nbsp;&nbsp;
-   <a href="FAQ.php">FAQ</a>&nbsp;&nbsp;&nbsp;
-   <a href="login.php">Login</a>
-  </div>
+<?php
+include 'init.php';
+include 'templates/header.inc.php';
+?>
   <table align="center" width="70%">
    <tr>
     <td><img src="javatealogo_small.png"/></td>

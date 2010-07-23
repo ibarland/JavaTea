@@ -1,27 +1,24 @@
-<html>
- <head><title>JavaTea</title></head>
- <body>
-  <div align="center">
-   <a href="/JavaTea">Home</a>&nbsp;&nbsp;&nbsp;
-   <a href="FAQ.php">FAQ</a>&nbsp;&nbsp;&nbsp;
-   <a href="">Login</a>
-  </div>
-  <div align="center">
-  <br/>
-  <br/>
-  <br/>
-  <br/>
-  <table>
-   <form name="login" method="post" action="check_login.php">
-   <tr><td>Username&nbsp;&nbsp;</td>
-       <td><input name="uname" id="uname" type="text"></td></tr>
-   <tr><td>Password&nbsp;&nbsp;</td>
-       <td><input name="pass" id="pass" type="password"></td></tr>
-   <tr><td><input type="submit" value="Login"></td>
-       <td><a href="register.php">Register</a>&nbsp;
-           <a href="forgot.php">Forgot password?</a></tr>
-   </form>
-  </table>
-  </div>
- </body>
-</html>
+<?php
+
+include 'init.php';
+
+if(is_authed()) {
+    header("Location: index.php");
+}
+
+include 'templates/header.inc.php';
+
+if(!isset($_POST['submit'])) {
+    include 'templates/login.inc.php';
+    exit;
+} else {
+    $result = user_login($_POST['uname'], $_POST['pass']);
+
+    if($result) {
+        echo 'Thank you for logging in, <a href="index.php">click her</a> to go back.';
+    } else {
+        $login_error = 'Incorrect username or password';
+        include 'templates/login.inc.php';
+    }
+}
+?>
