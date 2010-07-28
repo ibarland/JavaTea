@@ -1,0 +1,27 @@
+[2010.Jul.28 (Wed) meeting:]
+- investigate html post: is there a way to pass entire arrays/lists/hashes as a single variable?
+- [ian] Make a prob which requires two inputs ("pluralize_v1" or so)
+- have the html's post for "pluralize_v1" work for functions w/ arity > 1
+- add a way to validate inputs as correct Java: char, double, int, boolean, String
+   Note that the int "010" should evaluate to 8, since Java int literals starting with "0" are octal.
+   Probably the best way: JPype to just call Integer.parseInt(String) etc
+- Have .py complain if the input type doesn't match.
+- have code to validate email syntax.
+  (look for a lib (or regexp) published already; otherwise look for official (w3.org?) def'n of email syntax)
+- improve UI looks
+- add a 'bug report' button which adds a input box "describe the problem" to the web page
+  (in addition to the test cases they'd just submitted/typed), and emails me that info.
+
+
+
+Longer term tasks:
+- add the notion of assignments (list of probs, teacher-name, start-date, due-date, cutoff-date)
+  and a html page for each assignment.
+  (If logged in: a student sees their status for each problem on the assignment page.)
+- add a web form for teachers to create assignments (specifying the above info, selecting from
+  the existing problems.
+- Given a .java file of the right format (yet to be determined), create a html problem page from it.
+  The .java file must contain a short description, plus a long description/instructions.
+  Perhaps even a hint for each bad-version??
+- Given a directory of problem-pages, create an index page that links to each problem and 
+  contains a short description of it (<= 1 line).
