@@ -1,5 +1,5 @@
 <?php
-include 'init.php';
+include 'functions.php';
 include 'templates/header.inc.php';
 ?>
   <table align="center" width="70%">

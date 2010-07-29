@@ -1,6 +1,6 @@
 <?php
 
-include 'init.php';
+include 'functions.php';
 
 if(is_authed()) {
     header("Location: index.php");
