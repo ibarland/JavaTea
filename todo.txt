@@ -1,4 +1,15 @@
-[2010.Jul.28 (Wed) meeting:]
+2010.Aug.04 (Wed) meeting:
+ - Ian: get website forwarding all working
+ - Ian: make example test files,
+         including reverseStr() and a two-arg function.
+ - Ian: get installed and running on radford.edu:~itec120
+ - Joel: get validation of types (String)
+ - Joel: get tests with multiple inputs`
+ - Joel: validate email addresses
+
+
+
+[2010.Jul.28 (Wed) meeting:
 - investigate html post: is there a way to pass entire arrays/lists/hashes as a single variable?
 - [ian] Make a prob which requires two inputs ("pluralize_v1" or so)
 - have the html's post for "pluralize_v1" work for functions w/ arity > 1
