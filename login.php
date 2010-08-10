@@ -1,11 +1,13 @@
 <?php
 
-include 'functions.php';
+include 'init.php';
 
 if(is_authed()) {
     header("Location: index.php");
 }
-
+?>
+<html><head><title>JavaTea</title></head>
+<?php
 include 'templates/header.inc.php';
 
 if(!isset($_POST['submit'])) {

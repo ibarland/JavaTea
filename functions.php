@@ -25,6 +25,21 @@ function username_used($username) {
     }
 }
 
+function log_attempt($user, $pid) {
+    $query = "INSERT INTO Attempts (username, problem_id, submit_time) VALUES(\"$user\", \"$pid\", NOW())";
+    mysql_query($query) or die("Could not log attempt");
+}
+
+function log_input($attempt_id, $case_id, $field, $input) {
+    $query = "INSERT INTO Input (attempt_id, case_id, field, input) VALUES($attempt_id, $case_id, $field, \"$input\")";
+    mysql_query($query) or die("Could not log attempt");
+}
+
+function log_output($attempt_id, $case_id, $output) {
+    $query = "INSERT INTO Output (attempt_id, case_id, output) VALUES($attempt_id, $case_id, \"$output\")";
+    mysql_query($query) or die("Could not log attempt");
+}
+
 function user_login($username, $password) {
     $query = "SELECT * FROM Users WHERE username='$username'";
     $result = mysql_query($query);

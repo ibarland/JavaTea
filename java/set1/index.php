@@ -1,11 +1,10 @@
-<html>
- <head><title>JavaTea</title></head>
- <body>
-  <div align="center">
-   <a href="/JavaTea">Home</a>&nbsp;&nbsp;&nbsp;
-   <a href="/JavaTea/FAQ.html">FAQ</a>&nbsp;&nbsp;&nbsp;
-   <a href="/JavaTea/login.html">Login</a>
-  </div>
+<?php
+include '../../init.php';
+?>
+<html><head><title>JavaTea</title></head>
+<?php
+include '../../templates/header.inc.php';
+?>
   <table align="center" width="70%">
    <tr><td><h1>Java -> Set 1</h1></td><br/><br/></tr>
    <tr><td><a href="/JavaTea/prob/j0001">Problem 1</a><br/>
