@@ -1,0 +1,64 @@
+- purchase the domain name "coolsite.org" through googleapps, $10/yr
+   (This initially hosts the site at googleapps, which provides management tools.)
+
+- go to the google apps control panel for your site.
+       https://www.google.com/a/cpanel/coolsite.org/
+    If you forget the name of the site, it's roundabout to find it:
+       coolsite.org > login > other... > manage  .... .... ...
+
+
+
+
+- The actual domain-name registration is being done by a third-part company
+    (godaddy.com is the default as of 2010.Aug).
+    Let's figure out your godaddy.com account and password:
+    Control Panel > Domain Settings > Domain Names > Advanced DNS Settings
+
+   http://www.steegle.com/websites/google-sites-howtos/googlesites-frequentlyaskedquestionsfaq#TOC-Where-do-I-go-to-Edit-my-Google-App
+
+- log in to the godaddy admin page.
+  Note that you can't just go to "godaddy.com" -- you have to click on
+  the google-apps page which gave you your login,passwd above
+
+- Manage Domains > Domains > Domain Information > Forwarding > Manage;
+  You can enter the destination URL; 
+   also click "Advanced options" and choose "masking"
+
+
+
+http://www.steegle.com/websites/google-sites-howtos/googlesites-frequentlyaskedquestionsfaq#TOC-How-do-I-change-my-site-s-address-U
+
+
+
+
+-------
+Not working.   I'll try removing all A/Cname entries.
+Currently the A entries are "@" to 216.239.{30,32,34,36}.21
+  When I use 'reset to default entries, those are different: 64.233.179.121, ...)
+and CNAME entries are {calendar,docs,mail,start,www} to ghs.google.com
+
+I also re-pressed Set Nameservers > I want to forward my domains
+
+Perhaps an "A" record needs to be set to godaddy's domain-name server:
+ as per first comment on:
+ http://tech.puredanger.com/2010/07/05/redirectgoogle-apps-domain-to-a-blog/
+
+
+------------
+ [ several other failed attempts: changing an A record to nw0{2,3,4}.domaincontrol.com ]
+ 
+  I tried instead setting 'forward (temporary)' (w/o masking); 
+    this caused A record 64.202.189.170 to be added (since I had the
+    'update my DNS settings to support this change' checked);
+    but it didn't work until I removed the *old* A records.
+
+Try getting help at forums?:
+http://community.godaddy.com/groups/domains-management-and-services/forum/topic/google-mx-records-not-working-bug
+
+
+
+I deleted the SRV records (all for _jabber and _xmpp-server -- both
+dealing with instant-messaging and setting your 'online presence').
+They had been:
+  service: {_jabber,_xmpp-server}; protocol: _tcp; name: @; 
+  priority: {5,20}; weight: 0; port: 5269; target: xmpp-server{,{1,2,3,4}}.L.google.com
