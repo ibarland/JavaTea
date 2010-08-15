@@ -1,3 +1,22 @@
+ - rename "header.inc.php" to "navbar.inc.php"; 
+ - make a dir tst/ (for say uploadApp.php
+ - match header/footer;  pass an arg w/ the title and h1 name?
+ - connect to itec via oracle (not mysql); see session-init.php for password
+ - let's keep open/close tags in same file (e.g. <body> in header.inc.php).
+ - currently, session-init.php is called from index,logout,login,FAQ,register;
+    do these all want to include functions.php?  Call session_start()?
+    
+ 
+
+
+
+Changes made:
+- ~itec120/public_html/JavaTea/index.html -> index.php
+                                                     images
+                   dynamic_php/JavaTea/index.php
+                                                       init.php -> db-session-init.php
+
+
 2010.Aug.04 (Wed) meeting:
  - Ian: get website forwarding all working
  - Ian: make example test files,
