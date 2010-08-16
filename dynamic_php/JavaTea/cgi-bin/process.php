@@ -23,10 +23,13 @@ $types = mysql_fetch_array($results);
 print_r($types);
 //Validate input
 for($case_id = 1;$case_id <= $numcases;$case_id++) { 
+    echo $pid, "(";
     for($field = 1;$field <= $numfields;$field++) {
         echo $_POST["field$case_id-$field"];
+	if ($field != $numfields) echo ", ";
     }
-    echo $_POST["result$case_id"];
+    echo ") =? ", $_POST["result$case_id"], "<br/>\n";
+
 }
 //Run cases
 system("python $pid.py");
