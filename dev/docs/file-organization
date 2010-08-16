@@ -1,0 +1,20 @@
+~itec120/src/JavaTea : git repo
+~itec120/{dynamic_php,public_html} are live (and have other files besides JavaTea);
+~itec120/{dynamic_php,public_html}/JavaTea will have the live application (only our files);
+~itec120/src/JavaTea/{dynamic_php,public_html}/JavaTea/ has our working code base.
+    "make install" (at the repo root) will push the changes live from any machine.
+
+
+web@,php@ are symlinks for convenience; do not use them.
+  (Also: note that Makefile currently uses scp to install files, 
+   and scp will follow symbolic links, yikes. So don't make symlinks
+   inside our directory -- or at least, we'll have to change the Makefile
+   to use something like tar or pax instead of scp.)
+Also, ~itec120/jt@.
+
+Most of the previous files (php-ish) are just moved into repo:dynamic_php/.
+
+
+
+(Note: I deleted forgot.php; moved header.php to templates/header2.inc.php)
+  
