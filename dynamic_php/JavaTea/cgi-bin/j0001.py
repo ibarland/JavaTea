@@ -1,11 +1,25 @@
 #!/usr/bin/python
+
 import cgi
-from jpype import *
+import cgitb
+# enable error-message logging (to stdout):
+cgitb.enable()
+
 import os.path
+
+# For rucs, make sure ~/lib/../jpype found:
+from sys import path as syspath
+syspath.append("/home/itec120/lib/python2.5/site-packages/")
+from jpype import *   
+
+
+
+
 
 form = cgi.FieldStorage()
 jarpath = os.path.join(os.path.abspath('/var/www/JavaTea/'), 'build/classes')
-startJVM("/usr/lib/jvm/java-6-sun-1.6.0.20/jre/lib/i386/client/libjvm.so", "-Djava.class.path=%s" % jarpath)
+startJVM( getDefaultJVMPath(), "-Djava.class.path=%s" % jarpath )
+java.lang.System.out.println("hello woild (JPype is working)")
 TestCases = JClass('jtea.methods.TestCases')
 InputChecker = JClass('jtea.verify.InputChecker')
 t = TestCases()

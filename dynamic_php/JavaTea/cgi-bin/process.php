@@ -2,6 +2,9 @@
 
 include '../init.php';
 
+echo "<html>\n", "<head><title>JavaTea</title></head>\n", "<body>", "<pre>";
+echo "Just testing/debugging output:\n\n";
+
 $pid = $_POST['pid'];
 $numfields = $_POST['numfields'];
 $numcases = $_POST['numcases'];
@@ -31,6 +34,9 @@ for($case_id = 1;$case_id <= $numcases;$case_id++) {
     echo ") =? ", $_POST["result$case_id"], "<br/>\n";
 
 }
-//Run cases
+
+// Run the actual test cases against the provided:
 system("python $pid.py");
+
+echo "</pre>\n","</body>\n", "</html>\n";
 ?>
