@@ -2,9 +2,6 @@
 
 include '../init.php';
 
-echo "<html>\n", "<head><title>JavaTea</title></head>\n", "<body>", "<pre>";
-echo "Just testing/debugging output:\n\n";
-
 $pid = $_POST['pid'];
 $numfields = $_POST['numfields'];
 $numcases = $_POST['numcases'];
@@ -20,23 +17,23 @@ if(is_authed()) {
         log_output($attempt_id, $case_id, $_POST["result$case_id"]);
     }
 }
-$query = "SELECT field_id, type FROM Types WHERE problem_id='$pid'";
-$results = mysql_query($query);
-$types = mysql_fetch_array($results);
-print_r($types);
-//Validate input
+//Build XML String for processing
+$xml = "";
+$xml .= escapeshellcmd("<testCases>");
 for($case_id = 1;$case_id <= $numcases;$case_id++) { 
-    echo $pid, "(";
+    $xml .= escapeshellcmd("<testCase>");
     for($field = 1;$field <= $numfields;$field++) {
-        echo $_POST["field$case_id-$field"];
-	if ($field != $numfields) echo ", ";
+        $xml .= escapeshellcmd("<argument><type>")."int".escapeshellcmd("</type><value>").$_POST["field$case_id-$field"].escapeshellcmd("</value></argument>");
     }
-    echo ") =? ", $_POST["result$case_id"], "<br/>\n";
-
+    $xml .= escapeshellcmd("<return><type>int</type>");
+    $xml .= escapeshellcmd("<value>").$_POST["result$case_id"].escapeshellcmd("</value>");
+    $xml .= escapeshellcmd("</return>");
+    $xml .= escapeshellcmd("</testCase>");
 }
-
-// Run the actual test cases against the provided:
-system("python $pid.py");
-
-echo "</pre>\n","</body>\n", "</html>\n";
+$xml .= escapeshellcmd("</testCases>");
+//pass XML to java to verify input
+$output = shell_exec("python verify.py $xml");
+echo $output
+//Run cases
+//system("python $pid.py");
 ?>
