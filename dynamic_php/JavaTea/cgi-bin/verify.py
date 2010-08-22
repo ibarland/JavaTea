@@ -1,34 +1,20 @@
-#!/usr/bin/python
-from xml.dom.minidom import parseString
-import sys
+import os.path
 
-dom = parseString(reduce(lambda x, y: x + " " + y, sys.argv[1:]))
+from jpype import *
 
-def getText(nodelist):
-    rc = []
-    for node in nodelist:
-        if node.nodeType == node.TEXT_NODE:
-            rc.append(node.data)
-    return ''.join(rc)
+def check(data_list):
+    classpath = os.path.join(os.path.abspath('/home/itec120/'), 'build/classes')
+    startJVM( getDefaultJVMPath(), "-Djava.class.path=%s" % classpath)
+    InputChecker = JClass('jtea.methods.InputChecker')
+    check = InputChecker()
+    ret = 1
+    for item in data_list:
+        type, data = item
+        if check.isValid(data, type):
+            print "It's all good"
+        else:
+            print "Nope"
+    shutdownJVM()
+    return ret
 
-def parseCases(top):
-    return parseCase(top.getElementsByTagName("testCases").item(0))
-
-def parseCase(cases):
-    rc = []
-    for case in cases.getElementsByTagName("testCase"):
-        rc.append(parseArgs(case))
-    return rc
-
-def parseArgs(case):
-    rc = []
-    for arg in case.getElementsByTagName("argument"):
-        rc.append(parseData(arg))
-    for ret in case.getElementsByTagName("return"):
-        rc.append(parseData(ret))
-    return rc
-
-def parseData(s):
-    return (getText(s.getElementsByTagName("type").item(0).childNodes), getText(s.getElementsByTagName("value").item(0).childNodes))
-
-print parseCases(dom)
+print check([[(u'int', u'1'), (u'int', u'2')]])
