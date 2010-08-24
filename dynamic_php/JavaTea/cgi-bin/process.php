@@ -33,7 +33,5 @@ for($case_id = 1;$case_id <= $numcases;$case_id++) {
 $xml .= escapeshellcmd("</testCases>");
 //pass XML to java to verify input
 $output = shell_exec("python parse.py $pid $xml");
-echo $output
-//Run cases
-//system("python $pid.py");
+echo $output;
 ?>

@@ -1,10 +1,10 @@
 #!/usr/bin/python
 from xml.dom.minidom import parseString
 import sys
-import run
 import verify
 
 dom = parseString(reduce(lambda x, y: x + " " + y, sys.argv[2:]))
+pid = sys.argv[1]
 
 def getText(nodelist):
     rc = []
@@ -33,5 +33,5 @@ def parseArgs(case):
 def parseData(s):
     return (getText(s.getElementsByTagName("type").item(0).childNodes), getText(s.getElementsByTagName("value").item(0).childNodes))
 
-print parseCases(dom)
-verify.check(sys.argv[1], parseCases(dom))
+args = parseCases(dom)
+verify.check(args, pid)
