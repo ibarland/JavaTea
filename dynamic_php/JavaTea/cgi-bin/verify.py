@@ -22,7 +22,7 @@ def check(data_list, pid):
         if flag:
             print "   <p align=\"center\">Running tests..."
             print case
-            print run(pid, case)
+            run(pid, case)
             print "   </p><br\>"
         else:
             print "   <p align=\"center\">Improper input."
@@ -34,4 +34,4 @@ def check(data_list, pid):
 def run(pid, case):
     pack = JPackage('jtea').methods
     TestSuite = pack.TestSuite
-    t = TestSuite()
+    t = TestSuite("jtea.methods."+pid)
