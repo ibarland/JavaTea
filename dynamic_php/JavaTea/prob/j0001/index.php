@@ -36,7 +36,7 @@ include '../../templates/header.inc.php';
    </td></tr>
    <tr><td>
     <form action="../../cgi-bin/process.php" method="post">
-     <input type="hidden" name="pid" id="pid" value="j0001"/>
+     <input type="hidden" name="probId" id="probId" value="j0001"/>
      <input type="hidden" name="numfields" id="numfields" value="1"/>
      <input type="hidden" name="numcases" id="numcases" value="1"/>
      Add test cases with this button.&nbsp;&nbsp;&nbsp;
