@@ -2,13 +2,13 @@
 
 include '../init.php';
 
-$pid = $_POST['pid'];
+$probId = $_POST['probId'];
 $numfields = $_POST['numfields'];
 $numcases = $_POST['numcases'];
 //Check if user is logged in
 if(is_authed()) {
     //Log attempt if user is logged in
-    log_attempt($_SESSION['username'], $pid);
+    log_attempt($_SESSION['username'], $probId);
     $attempt_id = mysql_insert_id();
     for($case_id = 1;$case_id <= $numcases;$case_id++) { 
         for($field = 1;$field <= $numfields;$field++) {
@@ -32,6 +32,6 @@ for($case_id = 1;$case_id <= $numcases;$case_id++) {
 }
 $xml .= escapeshellcmd("</testCases>");
 //pass XML to java to verify input
-$output = shell_exec("python parse.py $pid $xml");
+$output = shell_exec("python parse.py $probId $xml");
 echo $output;
 ?>

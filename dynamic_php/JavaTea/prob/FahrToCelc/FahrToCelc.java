@@ -4,7 +4,7 @@
  *  and won't be above the planck temperature (~2.5e32 F)
  *  (<a href="http://www.straightdope.com/columns/read/807/what-is-the-opposite-of-absolute-zero">Planck temperature info</a>).
  */
-class FahrToCelc {
+public class FahrToCelc {
 
 
   double FahrToCelc( double f ) {

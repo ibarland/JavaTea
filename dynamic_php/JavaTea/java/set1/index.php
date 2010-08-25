@@ -11,7 +11,7 @@ include '../../templates/header.inc.php';
         Double a number<br/></td></tr>
    <tr><td><a href="../../prob/j0002">Problem 2</a><br/>
         Reverse a string<br/></td></tr>
-   <tr><td><a href="../../prob/FahrToCelc">Problem 2</a><br/>
+   <tr><td><a href="../../prob/FahrToCelc">FahrToCelc</a><br/>
         Convert Fahrenheit to Celcius<br/></td></tr>
   </table>
  </body>
