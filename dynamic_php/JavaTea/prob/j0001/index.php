@@ -35,7 +35,7 @@ include '../../templates/header.inc.php';
     <p>The function double takes in any integer and returns double its value</p>
    </td></tr>
    <tr><td>
-    <form action="../../cgi-bin/process.php" method="post">
+    <form action="results.php" method="post">
      <input type="hidden" name="probId" id="probId" value="j0001"/>
      <input type="hidden" name="numfields" id="numfields" value="1"/>
      <input type="hidden" name="numcases" id="numcases" value="1"/>
