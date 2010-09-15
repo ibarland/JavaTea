@@ -14,20 +14,28 @@ public class j0001 {
 			return;
 		}
 		printHeader();
+		int numTests = 0;
+		int testPassed = 0;
 		for(int i = 0;i < numcases;i++) {
 			Object[] list = new Object[numfields+1];
 			for(int j = 0;j < list.length;j++) {
 				list[j] = args[4+list.length*i+j];
 			}
 			if(verify(list)) {
-				printCase(list, eval(list));
+				testPassed += printCase(list, eval(list));
+				numTests++;
 			}
 		}
+		printPassRate(numTests, testPassed);
 		printFooter();
 	}
 
 	private static boolean eval(Object[] list) {
 		return Integer.parseInt((String)list[0])*2 == Integer.parseInt((String)list[1]);
+	}
+
+	private static int doubleNumber(int num) {
+		return num*2;
 	}
 
 	private static boolean verify(Object[] list) {
@@ -41,13 +49,31 @@ public class j0001 {
 		return true;
 	}
 
-	private static void printCase(Object[] list, boolean eval) {
-		String print = "<tr>";
-		for(Object o : list) {
-			print += "<td>"+o.toString()+"</td>";
-		}
-		print += "</tr>";
+	private static void printPassRate(int total, int passed) {
+		String print = "";
+		print += "<br/>";
+		print += "<p align=\"center\">";
+		print += (int)((float)passed / (float)total * 100.0);
+		print += "% of test cases passed";
+		print += "</p>";
 		System.out.println(print);
+	}
+
+	private static int printCase(Object[] list, boolean eval) {
+		String print = "";
+		if(eval) {
+			print = "<tr>";
+			print += "<td>System.out.println(\"Actual value: \" + doubleNumber(" + (String)list[0] + ") + \" , Expected value: " + doubleNumber(Integer.parseInt((String)list[0])) + ");";
+			print += "</tr>";
+			System.out.println(print);
+			return 1;
+		} else {
+			print = "<tr>";
+			print += "<td>Test case failed</td>";
+			print += "</tr>";
+			System.out.println(print);
+			return 0;
+		}
 	}
 
 	private static void printHeader() {
