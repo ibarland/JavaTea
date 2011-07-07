@@ -1,0 +1,91 @@
+<?php
+
+
+function rand_letter() {
+  return chr( rand(ord('A'),ord('Z')) + 32*rand(0,1) ); 
+  }
+
+function gen_salt() {
+    $salt = "";
+    global $maxLengths;
+    for($i = 0;  $i < $maxLengths['salt'];  $i++) {
+      $salt .= rand_letter();
+      }
+    return $salt;
+}
+
+function create_user($username, $password, $temail) {
+  $usernameSafe = mysql_real_escape_string($username);
+  $temailSafe = mysql_real_escape_string($temail);
+  $salt = gen_salt();
+  $encrypted = md5(md5($password).$salt);
+  $query = "INSERT INTO Users(username, password, teacher, salt, joined)
+            VALUES('$usernameSafe', '$encrypted', '$temailSafe', '$salt', now())";
+  mysql_query($query) or die('Could not create user.');
+  }
+
+function debug_query($q) {
+  echo "making query: ". htmlspecialchars($q). "<br />";
+  $result = mysql_query($q);  
+  // while ($row = mysql_fetch_array($result,MYSQL_ASSOC)) { ... }
+  echo "result is: ". SQLTableToHTML($result). "<br />";
+  return $result;
+  }
+
+
+function username_used($username) {
+  $usernameSafe = mysql_real_escape_string($username);
+  $query = "SELECT * FROM Users WHERE username='$usernameSafe'";
+  $result = mysql_query($query);
+  return (mysql_num_rows($result) > 0);
+  }
+
+function log_attempt($user, $pid) {
+    $query = "INSERT INTO Attempts(username, problem_id, submit_time) 
+              VALUES('$user', '$pid', now())";
+    mysql_query($query) or die("Could not log attempt");
+}
+
+function log_input($attempt_id, $case_id, $field, $input) {
+    $query = "INSERT INTO Inputs(attempt_id, case_id, field, input)
+              VALUES($attempt_id, $case_id, $field, '$input')";
+    mysql_query($query) or die("Could not log attempt");
+}
+
+function log_output($attempt_id, $case_id, $output) {
+    $query = "INSERT INTO Outputs(attempt_id, case_id, output)
+              VALUES('$attempt_id', '$case_id', '$output')";
+    mysql_query($query) or die("Could not log attempt");
+}
+
+function user_login($username, $password) {
+    $usernameSafe = mysql_real_escape_string($username);
+
+    $query = "SELECT * FROM Users WHERE username='$usernameSafe'";
+    $result = mysql_query($query);
+    $userRow = mysql_fetch_array($result,MYSQL_ASSOC);
+    $encrypted = md5( md5($password).$userRow['salt'] );
+
+    if ($encrypted === $userRow['password']) {
+        $_SESSION['username'] = $username;
+        $_SESSION['encrypted_name'] = md5($username);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function user_logout() {
+  session_unset();
+  session_destroy();
+  setcookie('PHPSESSID','', 1);  // N.B. May be ignored, if HTTP header has already been sent.
+  }
+
+function is_authed() {
+  return (isset($_SESSION['username']) && (md5($_SESSION['username']) == $_SESSION['encrypted_name']));
+  // Guard against somebody attacking $_SESSION['username']  (Is this really necessary?).
+  }
+
+
+
+?>

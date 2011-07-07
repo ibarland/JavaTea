@@ -1,9 +1,9 @@
 <?php
-include '../../init.php';
+  include_once( '../../init.php' );
 ?>
 <html><head><title>JavaTea</title></head>
 <?php
-include '../../templates/header.inc.php';
+  include( '../../templates/header.inc.php' );
 ?>
   <table align="center" width="70%">
    <tr><td><h1>Java -> Set 1</h1></td><br/><br/></tr>

@@ -1,0 +1,9 @@
+#! /bin/csh -f
+set file = $argv[1];
+if ($#argv > 1) then
+  set destFolder = $argv[2];
+else
+  set destFolder = "";
+  endif
+
+scp -pr "$file" "itec120@rucs.radford.edu:dynamic_php/JavaTea/$destFolder"

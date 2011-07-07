@@ -8,6 +8,8 @@ and looking at the (public) contents of getting-started.txt.
 
   - One-time setup:
       git clone git@github.com:ibarland/JavaTea.git
+      [Note-Ian: this also requires some ssh thing?  
+       I could clone read-only via 'git://github.com/ibarland/JavaTea.git']
     (This will create a directory JavaTea inside the current directory)
     Also, you can set your username and email as specified in tutorials (below).
 

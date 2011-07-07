@@ -6,12 +6,15 @@ include 'init.php';
 
  <body>
 <?php
-include 'templates/header.inc.php';
+include('templates/header.inc.php');
 ?>
-
+ 
   <h2>JavaTea FAQ</h2>
   ...more info later.  For now, direct questions to 
    ibarland AT radford DOT edu, thanks!
 
+  <hr/>
+
+  <?php include('terms-of-use-inc.html'); ?>
  </body>
 </html>

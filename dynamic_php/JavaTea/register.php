@@ -3,32 +3,36 @@ include 'init.php';
 include 'templates/header.inc.php';
 
 if(!isset($_POST['submit'])) {
-    include 'templates/register.inc.php';
-    exit;
-} else {
-    if(empty($_POST['uname']) || empty($_POST['pass1']) || empty($_POST['pass2'])) {
-        $reg_error = 'One or more fields missing';
-        include 'templates/register.inc.php';
-        exit;
+  include 'templates/register.inc.php';
+  exit;
+  }
+else {
+  $reg_error = '';
+  if(empty($_POST['uname'])) {
+    $reg_error .= 'Missing username. ';
     }
-    else if($_POST['pass1'] != $_POST['pass2']) {
-        $reg_error = 'Your passwords do not match';
-        include 'templates/register.inc.php';
-        exit;
+  if(empty($_POST['pass1'])) {
+    $reg_error .= 'Missing password. ';
     }
-    
-    else if(username_used($_POST['uname'])) {
-        $reg_error = 'Username is use already';
-        include 'templates/register.inc.php';
-        exit;
+  if(empty($_POST['pass2'])) {
+    $reg_error .= 'Missing password2. ';
     }
-    
-    $temail = $_POST['uname'];    
-    if(!empty($_POST['temail'])) {
-        $temail = $_POST['temail'];
+  if(username_used($_POST['uname'])) {
+    $reg_error .= 'Username is use already taken. ';
+    }
+  if($_POST['pass1'] != $_POST['pass2']) {
+    $reg_error .= 'Your passwords do not match. ';
     }
 
-    create_user($_POST['uname'], $_POST['pass1'], $temail);
-    echo 'Thank you for signing up, <a href="index.php">click here</a> to go back.';
+
+  if ($reg_error) {
+    include 'templates/register.inc.php';
+    exit;
+    }
+
+  $temail = get( $_POST, 'temail', $_POST['uname'] );
+
+  create_user($_POST['uname'], $_POST['pass1'], $temail);
+  echo "Thank you for signing up, ${_POST['uname']}; <a href='index.php'>click here</a> to go back.";
 }
 ?>

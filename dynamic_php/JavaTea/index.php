@@ -12,7 +12,7 @@ include 'templates/header.inc.php';
   <table align="center" width="70%">
    <tr>
     <td><img src="images/javatealogo_small.png"/></td>
-    <td>JavaTea: a web-based tool for teaching beginning programmers to write good (unit) test cases.</td>
+    <td>JavaTea: A web-based tool for teaching beginning programmers to write good (unit) test cases.</td>
    <tr>  
   </table>
   <table align="center" width="40%">

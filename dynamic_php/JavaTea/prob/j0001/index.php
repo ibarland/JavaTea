@@ -5,28 +5,29 @@ include '../../init.php';
  <head><title>JavaTea</title>
   <script type="text/javascript">
    function addRow() {
-   var doc = document.getElementById("cases");
+     var doc = document.getElementById("cases");
 
-   var a = (document.getElementsByTagName("input").length - 5) / 2 + 1;
+     var a = (document.getElementsByTagName("input").length - 5) / 2 + 1;
 
-   var f = new Array();
-   var r = new Array();   
+     var f = new Array();
+     var r = new Array();   
 
-   document.getElementById("numcases").value++;
+     document.getElementById("numcases").value++;
 
-   for(i=1;i<a;i++) {
-    f.push(document.getElementById("field"+i+"-1").value);
-    r.push(document.getElementById("result"+i).value);
-   }
+     for(i=1;i<a;i++) {
+      f.push(document.getElementById("field"+i+"-1").value);
+      r.push(document.getElementById("result"+i).value);
+     }
     
-   doc.innerHTML += "double( <input type=\"text\" name=\"field"+a+"-1\" id=\"field"+a+"-1\"/>) == <input type=\"text\" name=\"result"+a+"\" id=\"result"+a+"\"/><br/>";
-   for(i=1;i<a;i++) {
-    document.getElementById("field"+i+"-1").value = f[i-1];
-    document.getElementById("result"+i).value = r[i-1];
-   }
+     doc.innerHTML += "double( <input type=\"text\" name=\"field"+a+"-1\" id=\"field"+a+"-1\"/>) == <input type=\"text\" name=\"result"+a+"\" id=\"result"+a+"\"/><br/>";
+     for(i=1;i<a;i++) {
+      document.getElementById("field"+i+"-1").value = f[i-1];
+      document.getElementById("result"+i).value = r[i-1];
+     }
    }
   </script>
  </head>
+
 <?php
 include '../../templates/header.inc.php';
 ?>
