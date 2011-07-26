@@ -5,9 +5,14 @@ ini_set('display_startup_errors',true);
 //ini_set('error_log', dirname(__FILE__) . '/err.txt');
 error_reporting (E_ALL | E_STRICT); 
 
+define('ROOT_DIR', '/~itec120/JavaTea');
+
+//FIX: These should be relative to this file
+require_once(  ROOT_DIR.'/lib/functions-util.php' );
+require_once(  ROOT_DIR.'/lib/functions-db.php' );
+
 
 ini_set('date.timezone','America/New_York');
-define('ROOT_DIR', '/~itec120/JavaTea');
 
 $maxLengths = array();
 $maxLengths['username'] = 30;
@@ -17,7 +22,9 @@ $maxLengths['salt'] = 8;
 $maxLengths['arg'] = 8;
 
 
-session_start();
+  // started Hanging? See session_write_close() ?
+  session_set_cookie_params( 120/*mins*/*60, "/~itec120/JavaTea", ".radford.edu", true, true );
+  my_session_start('JavaTeaSessionID');
 
 
 /****
@@ -39,20 +46,8 @@ echo "</p>\n";
 ****/
 
 
-  
-$db_host = 'localhost'; // run the mysql instance on the php server.
-$db_user = 'itec120';
-$db_pass = 'cdrtee';
-$db_schema = $db_user;
-
-$session_timeout = 30*60;
-  
+require( ROOT_DIR . '/db-info.php' );  // get password.
 mysql_connect($db_host, $db_user, $db_pass) or die("Could not connect to db $db_host");
 mysql_select_db($db_schema) or die("Could not connect to schema $db_userselect.");
   
-//srand();
-  
-//FIX: These should be relative to this fie
-require_once(  dirname(__FILE__).'/'.'../lib/functions-util.php' );
-require_once(  dirname(__FILE__).'/'.'../lib/functions-db.php' );
 ?>
