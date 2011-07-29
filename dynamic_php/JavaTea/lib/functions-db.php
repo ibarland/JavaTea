@@ -18,7 +18,7 @@ function create_user($username, $password, $temail) {
   $usernameSafe = mysql_real_escape_string($username);
   $temailSafe = mysql_real_escape_string($temail);
   $salt = gen_salt();
-  $encrypted = md5(md5($password).$salt);
+  $encrypted = sha256(sha256($password).$salt);
   $query = "INSERT INTO Users(username, password, teacher, salt, joined)
             VALUES('$usernameSafe', '$encrypted', '$temailSafe', '$salt', now())";
   mysql_query($query) or die('Could not create user.');
@@ -64,28 +64,46 @@ function user_login($username, $password) {
     $query = "SELECT * FROM Users WHERE username='$usernameSafe'";
     $result = mysql_query($query);
     $userRow = mysql_fetch_array($result,MYSQL_ASSOC);
-    $encrypted = md5( md5($password).$userRow['salt'] );
+    $encrypted = sha256( sha256($password).$userRow['salt'] );
 
     if ($encrypted === $userRow['password']) {
         $_SESSION['username'] = $username;
-        $_SESSION['encrypted_name'] = md5($username);
+        $_SESSION['encrypted_name'] = sha256($username);
         return true;
     } else {
         return false;
     }
 }
 
-function user_logout() {
-  session_unset();
-  session_destroy();
-  setcookie('PHPSESSID','', 1);  // N.B. May be ignored, if HTTP header has already been sent.
-  }
-
 function is_authed() {
-  return (isset($_SESSION['username']) && (md5($_SESSION['username']) == $_SESSION['encrypted_name']));
+  return (isset($_SESSION['username']) && (hash('sha256', $_SESSION['username']) == $_SESSION['encrypted_name']));
   // Guard against somebody attacking $_SESSION['username']  (Is this really necessary?).
   }
 
+
+  /** Start a session.
+   * @param $sessName The name to use for the session (optional; server probably defaults to 'PHPSESSID').
+   * @return (void)
+   */
+  function my_session_start($sessName = '') {
+    if ($sessName) { session_name($sessName); }
+    session_start();
+    session_regenerate_id(true);
+    // Remember: you can call session_commit as soon as you're done writing session vars.
+    }
+
+  /** Remove all data associated with the current session.
+   * (Note that session_start gets called, even if it's already been opened.)
+   * @precondition Must be called before the http header is sent (since it resets the session cookie).
+   */
+  function my_session_destroy() {
+    session_start();
+    $scp = session_get_cookie_params();  /* scp ~ session-cookie-params */
+    setcookie( $session_name(), '', 1, $scp['path'], $scp['domain'], $scp['secure'], $scp['httponly'] ); 
+    /* N.B. the last two params could be omitted, no prob, since we're destroying the cookie. */
+    session_unset();   /* Unset the contents of $_SESSION */
+    session_destroy(); /* Delete the server's file of data. */
+    }
 
 
 ?>

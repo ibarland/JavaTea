@@ -39,4 +39,14 @@ test( toJsString( array(3 => array(2=>99, "ab"=>98, 3=>"abc", "abcd" => "wxyz"),
           . ' 5:' . fudge('{7:77, AB:76, 8:"ABC", ABCD:"WXYZ"}') . '}'));
 
 print "\n";
+
+
+//  `test` doesn't (yet) work for arrays...
+//test( array2D_map( sqrt, array(array(1,4,9), array(4,16,36)) ),
+//      array(array(1,2,3), array(2, 4, 6)) );
+
+echo "Actual:";
+print_r( array2D_map( sqrt, array(array(1,4,9), array(4,16,36)) ) );
+echo "Expected:";
+print_r( array(array(1,2,3), array(2, 4, 6)) );
 ?>

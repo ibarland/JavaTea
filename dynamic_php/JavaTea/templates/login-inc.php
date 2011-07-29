@@ -6,6 +6,8 @@ if(isset($login_error)) {
   }
 ?>
 
+/* N.B. Currently, init.php does a session_commit ! */
+
 <form name="login" method="post" action="login.php">
  <table align="center">
  <tr><td>email&nbsp;&nbsp;</td>

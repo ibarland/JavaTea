@@ -1,5 +1,9 @@
 <?php
 
+/** A test-harness function: if actual and desired aren't identical,
+ * print a message to that effect (else just print ".").
+ * @param $actual
+ */
 function test($actual,$desired) {
   if ($actual===$desired)
     print ".";
@@ -7,6 +11,51 @@ function test($actual,$desired) {
     print "Test failed: Got:\n$actual but wanted:\n$desired\n";
   }
 
+/** A function-version of the && operator, for use as a higher-order function
+ * (e.g. for array_reduce).  Warning: remember that functions never short-circuit!
+ * @param $a The first value to compare.
+ * @param $b The second value to compare.
+ * @return $a&&$b (but without short-circuiting).
+ */
+function andFunc($a,$b) { return $a && $b; }
+
+/** A function-version of the || operator, for use as a higher-order function
+ * (e.g. for array_reduce).  Warning: remember that functions never short-circuit!
+ * @param $a The first value to compare.
+ * @param $b The second value to compare.
+ * @return $a||$b (but without short-circuiting).
+ */
+function orFunc($a,$b)  { return $a || $b; }
+
+/** A function-version of the ! operator, for use as a higher-order function
+ * (e.g. for array_reduce).
+ * @param $a The value to negate.
+ * @return !$a
+ */
+function notFunc($a,$b)  { return !$a; }
+
+
+/** Map f to each entry in a 2-d array.  (Order of evaluation is not specified.)
+ * @param $f A one-arg function, which will be given each entry in a 2-D array.
+ * @param $arr2d The 2-D array to process.
+ * @return An array with the same size of $arr2d, whose entries are $f applied
+ *         to the corresponding entry in $arr2d.
+ * Example:  array2D_map( sqrt, array(array(1,4,9), array(4,16,36)) )
+ *         =                    array(array(1,2,3), array(2, 4, 6))
+ */
+function array2D_map( $f, $arr2d ) {
+  // Arrg, php.radford.edu not yet running php 5.3, so we can't just say:
+  // $rowHandler = function($row) use ($f) { return array_map($f,$row); };
+  // return array_map( $rowHandler, $arr2d );
+  $result = array();
+  foreach ( $arr2d as $rowIdx => $row ) {
+    $result[$rowIdx] = array();
+    foreach ( $row as $colIdx => $entry ) {
+      $result[$rowIdx][$colIdx] = $f($entry);
+      }
+    }
+  return $result;
+  }
 
 /** get: a safe version of array-lookup.
  * @param arr The array to look up $idx in.
@@ -47,7 +96,7 @@ function SQLTableToHTML( $table ) {
  * @param $asHeader  Return a a row  with <th>'s and array-keys? (vs <tr>'s and array-values)
  * @return an HTML-table-row (<tr>) with the contents of an array.
  */
-function arrayToHTMLRow( $arr, $asHeader ) {
+function arrayToHTMLRow( $arr, $asHeader = false ) {
   $indent="  ";
   $cellTag = ($asHeader  ?  "th"  :  "td");
   $open  = "<"  . $cellTag . ">";
@@ -62,17 +111,31 @@ function arrayToHTMLRow( $arr, $asHeader ) {
   }
 
 
+function array2DToHTMLTable( $arr2D, $colHeaders = null) {
+  $soFar = "<table border='1'>\n";
+  if ($colHeaders) {
+    $soFar .= arrayToHTMLRow( $colHeaders, true );
+    }
+  foreach ($arr2D as $oneRow) {
+    $soFar .= arrayToHTMLRow( $oneRow, false );
+    }
+  $soFar .= "</table>\n";
+  return $soFar;
+  }
+
   /** Return a *string* (not a DOM node -- this is server-side) of html.
    * @param $tagName The tag, e.g. `p`.
    * @param $attrs An array of attribute/value pairs, e.g. `{ "align" => "center" }
    * @param $bod The string to use as the body of the tag.  Must be proper html.
    * @return a *string* of html for the given tag.
    */
-  function entag($tagName,$attrs,$bod) {
+  function enTag($tagName,$attrs,$bod) {
     $result = "";
     $result .= "<" . $tagName;
-    foreach ($attrs as $attr => $val) {
-      $result .= (' ' . $attr . '="' . $val . '"');
+    if ($attrs) {
+      foreach ($attrs as $attr => $val) {
+        $result .= (' ' . $attr . '="' . $val . '"');
+        }
       }
     $result .= ">\n";
     if ($bod) $result .= $bod."\n";  // Avoid \n if $bod empty.
@@ -93,10 +156,11 @@ function arrayToHTMLRow( $arr, $asHeader ) {
    * iterate over that js object with "for (var i in ..obj..) { ...obj[i]... }
    * and/or use Object.keys(obj).length, and beware sparse arrays.
    */
-  function arrayToJavascriptVar($jsArrName,$phpArr) {
+  function valToJavascriptVar($jsVarName,$phpVal) {
     $res = ""; //result
-    $res .= "  var $jsArrName = ";
-    $res .= arrayToJavascript($phpArr);
+    $res .= "  var $jsVarName = ";
+    $res .= toJsString($phpVal);
+    return $res;
     }
 
 
@@ -157,30 +221,6 @@ function arrayToHTMLRow( $arr, $asHeader ) {
     }
 
 
-  /** Start a session.
-   * @param $sessName The name to use for the session (optional; server probably defaults to 'PHPSESSID').
-   * @return (void)
-   */
-  function my_session_start($sessName = '') {
-    if ($sessName) { session_name($sessName); }
-    session_start();
-    session_regenerate_id(true);
-    // Remember: you can call session_commit as soon as you're done writing session vars.
-    }
-
-  /** Remove all data associated with the current session.
-   * (Note that session_start gets called, even if it's already been opened.)
-   * @precondition Must be called before the http header is sent (since it resets the session cookie).
-   */
-  function my_session_destroy() {
-    session_start();
-    $scp = session_get_cookie_params();  /* scp ~ session-cookie-params */
-    setcookie( $session_name(), '', 1, $scp['path'], $scp['domain'], $scp['secure'], $scp['httponly'] ); 
-    /* N.B. the last two params could be omitted, no prob, since we're destroying the cookie. */
-    session_unset();   /* Unset the contents of $_SESSION */
-    session_destroy(); /* Delete the server's file of data. */
-    }
-
 
 
   function my_exec($cmd, $input='')  {
@@ -197,5 +237,7 @@ function arrayToHTMLRow( $arr, $asHeader ) {
                  'input'=>$input
                 ); 
     } 
+
+  function sha256($msg) { return hash('sha256',$msg); }
 
 ?>

@@ -148,8 +148,9 @@ if (!isset(__includedFiles)) { // Guard against *this* file being multi-included
  */
 function enTag( tagName, attrs, bod ) {
   var newTag = document.createElement(tagName);
-  // add each of attrs:
-  if (attrs) throw "entag: Attrs not yet supported.  Should be easy to add, eh?  " + tagName;
+  for (var attrName in attrs) {
+    newTag.setAttribute( attrName, attrs[attrName] );
+    }
   newTag.appendChild( isString(bod) ? document.createTextNode(bod) : bod ); 
   return newTag; 
   } 

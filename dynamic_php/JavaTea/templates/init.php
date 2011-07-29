@@ -7,7 +7,6 @@ error_reporting (E_ALL | E_STRICT);
 
 define('ROOT_DIR', '/~itec120/JavaTea');
 
-//FIX: These should be relative to this file
 require_once(  ROOT_DIR.'/lib/functions-util.php' );
 require_once(  ROOT_DIR.'/lib/functions-db.php' );
 
@@ -16,7 +15,7 @@ ini_set('date.timezone','America/New_York');
 
 $maxLengths = array();
 $maxLengths['username'] = 30;
-$maxLengths['password'] = 30;  // N.B. in database we store md5(..), which is char(32) (a hex numeral)
+$maxLengths['password'] = 64;  // N.B. in database we store sha256(..), which is char(64) (a hex numeral)
 $maxLengths['temail'] = $maxLengths['username'];
 $maxLengths['salt'] = 8;
 $maxLengths['arg'] = 8;
@@ -25,6 +24,7 @@ $maxLengths['arg'] = 8;
   // started Hanging? See session_write_close() ?
   session_set_cookie_params( 120/*mins*/*60, "/~itec120/JavaTea", ".radford.edu", true, true );
   my_session_start('JavaTeaSessionID');
+  session_commit();  // *** SHOULD CHANGE FOR LOGIN PAGE
 
 
 /****
