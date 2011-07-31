@@ -238,6 +238,30 @@ function array2DToHTMLTable( $arr2D, $colHeaders = null) {
                 ); 
     } 
 
+  /** Return the sha-256 hash of text.
+   * @param msg (string) The message to hash.
+   * @param return the sha-256 hash of $msg.  Same as hash('sha256',$msg).
+   * @see hash, sha1.
+   */
   function sha256($msg) { return hash('sha256',$msg); }
+
+
+  /** For a given column of an array, return the row-indices that contain [or, do not contain]
+   *  a given element.
+   * @param $arr2D The array to search.
+   * @param $colIdx The column index to search.  (mixed type)
+   * @param $target The value to look for.
+   * @param $negate Negate the search?  If set, find all items *not* equal to $target. (default false)
+   * @return An array of row-indices rs such that ($arr2D[rs[i]][$colIdx] == $target) == !$negate.
+   */
+  function findInColumn( $arr2D, $colIdx, $target, $negate ) {
+    $whenToIncrement = !$negate;  // (we are incidentally coercing to a boolean)
+    $matches = array();
+    for ($arr2D as $rowNum => $row) {
+      if ( (get($row,$colIdx)==$target) == $whenToIncrement) $matches[] = $rowNum;
+      }
+    return $matches;
+    }
+
 
 ?>

@@ -170,6 +170,43 @@ END_JAVA_SEGMENT;
   //echo array2DToHTMLTable($runResultsPF);
 
 
+
+
+  /** Return which bugs weren't caught, as indicated by the $testResults.
+   * @param $testResults A 2-D array of booleans: $testResults[t][b] iff test #t passed (buggy) #b.
+   *        NOTE: column 0 is *not* considered buggy, and 0 won't be returned.
+   * @return A list of those implementations which passed all tests.
+   */
+  function bugsMissed( $testResults ) {
+    // $expectedValsCorrect = (countInColumn($testResults, 0, false) == 0);
+
+    $misses = array();
+    for ($testResults[0] as $bugID => $dummy) {
+      if (count(findInColumn($testResults,$bugID,false)) == 0) { $misses[] = $bugID; }
+      }
+    // Remove 0 from $misses (since implementation 0 isn't a buggy implementation):
+    return array_filter($misses, function($elt){ return $elt!=0;} );
+    }
+
+  /** For a given column of an array, return the row-indices that contain [or, do not contain]
+   *  a given element.
+   * @param $arr2D The array to search.
+   * @param $colIdx The column index to search.  (mixed type)
+   * @param $target The value to look for.
+   * @param $negate Negate the search?  If set, find all items *not* equal to $target. (default false)
+   * @return An array of row-indices rs such that ($arr2D[rs[i]][$colIdx] == $target) == !$negate.
+   */
+  function findInColumn( $arr2D, $colIdx, $target, $negate ) {
+    $whenToIncrement = !$negate;  // (we are incidentally coercing to a boolean)
+    $matches = array();
+    for ($arr2D as $rowNum => $row) {
+      if ( (get($row,$colIdx)==$target) == $whenToIncrement) $matches[] = $rowNum;
+      }
+    return $matches;
+    }
+
+
+
 ?>
 
 
@@ -177,12 +214,33 @@ END_JAVA_SEGMENT;
 <html>
  <head><title>JavaTea</title>
    <style type="text/css"> 
-     .tests : { padding:0px; border:1px blue; }
-errCase : { color
+     .tests  { padding:0px; border:1px blue; }
+     .test-pass  { color:#880000 }
+     .test-fail  { color:#008800 }
+     .hacker-danger, .input-invalid-type { color:#ff0000 }
+     .hacker-safe   { color:#008800 }
+     .input-valid-type { color:#000000 }
+     #insertTD { vertical-align:bottom }
    </style>
 
    <script type="text/javascript" src="<?php echo ROOT_DIR; ?>/lib/functions-util.js" ></script>
    <script type="text/javascript">
+
+
+
+    function verifyInput() {
+      for (i in tests) {
+        var testIEmpties = 0;
+        for (j in tests[i]) {
+          if (tests[i][j]) ++testIEmpties;
+          }
+        if (testIEmpties==tests[i].length) { /* remove test[i] */ }
+        else if (testIEmpties > 0) {
+          /* Turn input cell error-red */
+          }
+        }
+      return true;
+      }
 
     /** Return a td tag with the given body.
      * @param bod (string or node): The body of the td tag.
@@ -259,19 +317,22 @@ errCase : { color
 
     <p><code><table><tr id="sig"/></table>
     </table></code> <br/>
-      <code>timesThree</code> takes in any double and returns three times its value.
+      <code>timesThree</code> takes in any number and returns three times its value.
    </p>
 
   <form action="<?php echo basename(__FILE__) ?>" method="post">
     <input type="hidden" name="probId" id="probId" value="p0001"/>
 
+    <table border="0"><tr><td> <!-- Ugh, a hack to suppress any linebreak between codeblock, button -->
     <code>
       <table align="center" class="tests" id="tests"></table>  
       <!-- Pls. keep `tests` body entirely empty of whitespace, kthx. -->
     </code>
-    <input type="button" value="Add Another Test" onclick="insertCase('tests',{})" /><br/>
+    </td><td id="insertTD">
+    <input type="button" value="add another test" id="insert" onclick="insertCase('tests',{})" /><br/>
+    </td></tr></table>
 
-    <input type="submit" name="submit" value="Submit" />
+    <input type="submit" name="submit" value="Test the hackers' code!" onclick="verifyInput()" />
   </form>  
 
   <script type="text/javascript">
