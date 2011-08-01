@@ -35,6 +35,7 @@ function orFunc($a,$b)  { return $a || $b; }
 function notFunc($a,$b)  { return !$a; }
 
 
+
 /** Map f to each entry in a 2-d array.  (Order of evaluation is not specified.)
  * @param $f A one-arg function, which will be given each entry in a 2-D array.
  * @param $arr2d The 2-D array to process.
@@ -160,6 +161,7 @@ function array2DToHTMLTable( $arr2D, $colHeaders = null) {
     $res = ""; //result
     $res .= "  var $jsVarName = ";
     $res .= toJsString($phpVal);
+    $res .= ";";
     return $res;
     }
 
@@ -169,6 +171,9 @@ function array2DToHTMLTable( $arr2D, $colHeaders = null) {
   function toJsString( $phpVal) {
     switch( gettype($phpVal) ) {
       case "boolean":
+       // If we just sprintf('%s',false) we get the empty string (sigh)
+       return sprintf('%s', ($phpVal ? "true" : "false") ); //
+
       case "integer":
       case "double": //includes float
         return sprintf('%s', $phpVal);
@@ -255,10 +260,12 @@ function array2DToHTMLTable( $arr2D, $colHeaders = null) {
    * @return An array of row-indices rs such that ($arr2D[rs[i]][$colIdx] == $target) == !$negate.
    */
   function findInColumn( $arr2D, $colIdx, $target, $negate ) {
+    if (!isset($negate)) $negate = false;
     $whenToIncrement = !$negate;  // (we are incidentally coercing to a boolean)
     $matches = array();
-    for ($arr2D as $rowNum => $row) {
-      if ( (get($row,$colIdx)==$target) == $whenToIncrement) $matches[] = $rowNum;
+    foreach ($arr2D as $rowNum => $row) {
+      if ( isset($row[$colIdx]) && ($row[$colIdx]==$target) == $whenToIncrement)
+        $matches[] = $rowNum;
       }
     return $matches;
     }

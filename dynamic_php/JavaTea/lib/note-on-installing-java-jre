@@ -1,0 +1,10 @@
+JavaTea looks for a JRE installed in JAVATEA_HOME/lib/java/.
+  (Reason: while Radford's server lets scripts run system('java'),
+   there was no system('javac').)
+
+To install rucs:
+
+rsync -a /usr/local/java/ ./java/
+# Now, resolve a file that was a non-local link:
+rm  ./java/jre/lib/i386/jvm.cfg
+cp  /etc/java-6-sun/jvm.cfg   ./java/jre/lib/i386/jvm.cfg

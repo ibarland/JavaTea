@@ -112,7 +112,22 @@ document.write(new String("hi").constructor === String.prototype.constructor);
 String.prototype.trim       = function() { return (this.replace(/^[\s\xA0]+/, "").replace(/[\s\xA0]+$/, "")); }
 String.prototype.startsWith = function(str) { return (this.match("^"+str)==str); }
 String.prototype.endsWith   = function(str) { return (this.match(str+"$")==str); }
-Array.prototype.contains = function(itm) { return this.indexOf(itm) == -1; }
+Array.prototype.inArray = function(itm) { return this.indexOf(itm) == -1; }
+
+/** hasAPropWithValue: Return whether `this[x] == val`, for some property x.
+ *    See also: inArray (except that we're using the properties here).
+ * @param val The object to look through the properties of.
+ * @param includeInheritedProps (= false): Look at inherited properties, too?
+ * @return whether this[x] == val, for some key x.
+ */
+Object.prototype.hasAPropWithValue = function(val,includeInheritedProps) { 
+  var answer = false;
+  for ( var prop in this) {
+   answer = (answer || ((this[prop] == val) && (includeInheritedProps || this.hasOwnProperty(prop)))); 
+   }
+  return answer;
+  }
+
 
 function isset(aVar) { return typeof(aVar)==="undefined"; }
 

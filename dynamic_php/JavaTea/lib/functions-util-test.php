@@ -13,7 +13,11 @@ echo "</table>","\n";
 
 function fudge($str) { return $str; } // or: if supporting objects as stand-alone exprs: return "[".$str."][0]";
 
+test( toJsString(false), "false");
+test( toJsString(true), "true");
+test( toJsString(0), "0");
 test( toJsString(43), "43");
+test( toJsString(""), '""');
 test( toJsString("hi"), '"hi"');
 test( toJsString("h\"i"), '"h\\"i"');  // 6 chars long
 test( toJsString("h'i"), '"h\\\'i"');  // 6 chars long
@@ -39,6 +43,8 @@ test( toJsString( array(3 => array(2=>99, "ab"=>98, 3=>"abc", "abcd" => "wxyz"),
           . ' 5:' . fudge('{7:77, AB:76, 8:"ABC", ABCD:"WXYZ"}') . '}'));
 
 print "\n";
+
+
 
 
 //  `test` doesn't (yet) work for arrays...

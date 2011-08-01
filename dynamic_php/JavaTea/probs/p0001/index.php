@@ -93,7 +93,7 @@ echo <<<END_JAVA_SEGMENT
 class Test${className} {
 
   public static boolean[][] runTests() {
-    // An array of test-case x buggy-soln (whether or not the test-case passee).
+    // An array of test-case x buggy-soln (whether or not the test-case passed).
     boolean[][] results = new boolean[$numTests][$numBuggySolns];
 
 END_JAVA_SEGMENT;
@@ -161,50 +161,33 @@ END_JAVA_SEGMENT;
   $runResultsStr2 = str_replace( ']', ')', $runResultsStr1 );
   eval( '$runResults = ' . $runResultsStr2 . ';' );  // Parse string to array.
   
-  function resultToPF($t) {
-    $report = ($t ? "pass" : "fail"); 
-    return $report; "<td class='test-$report'>$report</td>";
-    }
-  $runResultsPF = array2D_map( "resultToPF", $runResults );
   
-  //echo array2DToHTMLTable($runResultsPF);
+  //echo array2DToHTMLTable($runResults);
 
 
 
 
   /** Return which bugs weren't caught, as indicated by the $testResults.
-   * @param $testResults A 2-D array of booleans: $testResults[t][b] iff test #t passed (buggy) #b.
-   *        NOTE: column 0 is *not* considered buggy, and 0 won't be returned.
+   * @param $testResults A 2-D array of booleans: 
+   *    $testResults[t][b] iff test #t passed (buggy) implementation#b.
+   *    NOTE: column 0 is *not* considered a buggy implementation, and 0 won't be returned.
    * @return A list of those implementations which passed all tests.
    */
   function bugsMissed( $testResults ) {
-    // $expectedValsCorrect = (countInColumn($testResults, 0, false) == 0);
-
     $misses = array();
-    for ($testResults[0] as $bugID => $dummy) {
-      if (count(findInColumn($testResults,$bugID,false)) == 0) { $misses[] = $bugID; }
+    foreach (get($testResults,0,array()) as $bugID => $dummy) {
+      if ($bugID !=0  &&  count(findInColumn($testResults,$bugID,false,false)) == 0) {
+        $misses[] = $bugID; 
+        }
       }
-    // Remove 0 from $misses (since implementation 0 isn't a buggy implementation):
-    return array_filter($misses, function($elt){ return $elt!=0;} );
+    return $misses;
     }
 
-  /** For a given column of an array, return the row-indices that contain [or, do not contain]
-   *  a given element.
-   * @param $arr2D The array to search.
-   * @param $colIdx The column index to search.  (mixed type)
-   * @param $target The value to look for.
-   * @param $negate Negate the search?  If set, find all items *not* equal to $target. (default false)
-   * @return An array of row-indices rs such that ($arr2D[rs[i]][$colIdx] == $target) == !$negate.
-   */
-  function findInColumn( $arr2D, $colIdx, $target, $negate ) {
-    $whenToIncrement = !$negate;  // (we are incidentally coercing to a boolean)
-    $matches = array();
-    for ($arr2D as $rowNum => $row) {
-      if ( (get($row,$colIdx)==$target) == $whenToIncrement) $matches[] = $rowNum;
-      }
-    return $matches;
-    }
 
+  $testsWereValid = (count(findInColumn($runResults,0,false,false)) > 0);
+  $bugsThatPassed = bugsMissed($runResults);
+
+  
 
 
 ?>
@@ -213,14 +196,17 @@ END_JAVA_SEGMENT;
 
 <html>
  <head><title>JavaTea</title>
+    <!--  hacker-detected : yay, we unmasked a hacker!  (test-case failed)
+          hacker-undetected : oh no -- a hacker passed *all* tests, incl. this one!
+          hacker-inconclusive : we did detect this hacker, but not via this particular test.
+    -->
    <style type="text/css"> 
      .tests  { padding:0px; border:1px blue; }
-     .test-pass  { color:#880000 }
-     .test-fail  { color:#008800 }
-     .hacker-danger, .input-invalid-type { color:#ff0000 }
-     .hacker-safe   { color:#008800 }
-     .input-valid-type { color:#000000 }
-     #insertTD { vertical-align:bottom }
+     .hacker-undetected, .input-invalid-type { color:#ff0000; }
+     .hacker-detected { color:#008800; }
+     .hacker-inconclusive, .input-valid-type { color:#000000; }
+     .javaTea-error { color:#ff0000; blink:true}
+     #insertTD { vertical-align:bottom; }
    </style>
 
    <script type="text/javascript" src="<?php echo ROOT_DIR; ?>/lib/functions-util.js" ></script>
@@ -279,7 +265,8 @@ END_JAVA_SEGMENT;
       if (!existingTests && !asSignature) javateaWarn("<?php echo(__FILE__);?>","anotherCase","Adding test cases before table-of-tests is defined.");
       var caseNum = (existingTests ? existingTests.length : 0);
       var tstCase = document.createElement('tr');
-      // Provide an id (for the entire row, not an input box), in case we want to delete row later:
+      // Provide an id (for the entire row, not just one of the input box), 
+      // in case we want to delete row later:
       if (!asSignature) { tstCase.setAttribute('id', 'tests['+caseNum+']' ); } 
       tstCase.appendChild( td( asSignature ? signature[0].type : "" ) );
       tstCase.appendChild( td(signature[0].name) );
@@ -298,11 +285,33 @@ END_JAVA_SEGMENT;
 
 
    
+    function resultsStyle( testPassed, bugMissed ) {
+      if (testPassed) {
+        return bugMissed ? 'hacker-undetected' : 'hacker-inconclusive';
+        }
+      else {
+        if (bugMissed) { javaTeaError('resultsStyle', 'bugMissed, yet !testPassed ?!' ); }
+        return bugMissed ? 'javatea-error' : 'hacker-detected';
+        }
+      }
 
-    function insertCase( node, data, resultStrs ) {
+    /** Add a row to the table of test-cases, filling it with `data` (expressions).
+     * If `results` provided, then also add columns of the T/F results of the test-cases.
+     * @param node The xml 'id' attr of a 'table' element, to add this row to.
+     * @param data The expressions (Strings) to insert into the row.
+     *        Presumably an array (well, properties) of arg-index => exprs (strings).
+     *        If a non-object, then this will be a signature (no input boxes or exprs).  
+     * @param results (boolean[]) For each buggy-implementation, did it pass?
+     * @param bugsMissed A list of the buggy-implementations (column-numbers) that passed.
+     */
+    function insertCase( node, data, results, bugsMissed ) {
+      if (results && !data) { javaTeaError('insertCase', 'results but no expressions?!'); }
+      // The test cases:
       var latestTestCase = anotherCaseAsTr( data );
-      for (var i in resultStrs) {
-        latestTestCase.appendChild( td( resultStrs[i], 'test-'+resultStrs[i] ) );
+      // Now, the test results:
+      for (var i in results) {
+        var tdClass = resultsStyle(results[i], bugsMissed.hasAPropWithValue(i));
+        latestTestCase.appendChild( td( (results[i] ? "pass" : "fail"), tdClass ) );
         }
       document.getElementById(node).appendChild( latestTestCase );
       var firstArgInputBox = document.getElementById( latestTestCase.getAttribute("id") + "[1]" );
@@ -336,10 +345,11 @@ END_JAVA_SEGMENT;
   </form>  
 
   <script type="text/javascript">
-    <?php echo valToJavascriptVar( "runResults", $runResultsPF ), "\n"; ?>
+    <?php echo valToJavascriptVar( "runResults", $runResults ), "\n"; ?>
+    <?php echo valToJavascriptVar( "bugsMissed", $bugsThatPassed ), "\n"; ?>
     insertCase('sig', true );
     for (var i=0;  i in tests;  ++i) {
-      insertCase('tests', tests[i], runResults[i] );
+      insertCase('tests', tests[i], runResults[i], bugsMissed );
       }
     if (! (0 in tests)) insertCase('tests', {});  // An initial blank row.
   </script>
