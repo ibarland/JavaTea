@@ -207,6 +207,7 @@ END_JAVA_SEGMENT;
      .hacker-inconclusive, .input-valid-type { color:#000000; }
      .javaTea-error { color:#ff0000; blink:true}
      #insertTD { vertical-align:bottom; }
+     .description { font-size:150% }
    </style>
 
    <script type="text/javascript" src="<?php echo ROOT_DIR; ?>/lib/functions-util.js" ></script>
@@ -310,6 +311,7 @@ END_JAVA_SEGMENT;
       var latestTestCase = anotherCaseAsTr( data );
       // Now, the test results:
       for (var i in results) {
+        if (i==0 || !results.hasOwnProperty(i)) continue;
         var tdClass = resultsStyle(results[i], bugsMissed.hasAPropWithValue(i));
         latestTestCase.appendChild( td( (results[i] ? "pass" : "fail"), tdClass ) );
         }
@@ -320,14 +322,17 @@ END_JAVA_SEGMENT;
   </script>
  </head>
 
+
+ <body>
 <?php
   include( $projRootDir . 'templates/header-inc.php' );
 ?>
-
-    <p><code><table><tr id="sig"/></table>
-    </table></code> <br/>
-      <code>timesThree</code> takes in any number and returns three times its value.
-   </p>
+    <p class='description'>
+    <code><table><tr id="sig" class='description'/></table>
+    </code>
+    <br/>
+      <code>timesThree</code> takes in any number, and returns three times its value.
+    </p>
 
   <form action="<?php echo basename(__FILE__) ?>" method="post">
     <input type="hidden" name="probId" id="probId" value="p0001"/>
@@ -347,13 +352,34 @@ END_JAVA_SEGMENT;
   <script type="text/javascript">
     <?php echo valToJavascriptVar( "runResults", $runResults ), "\n"; ?>
     <?php echo valToJavascriptVar( "bugsMissed", $bugsThatPassed ), "\n"; ?>
+    <?php echo valToJavascriptVar( "numBugsMissed", count($bugsThatPassed) ), "\n"; ?>
+    <?php echo valToJavascriptVar( "numTests", count($runResults) ), "\n"; ?>
+    <?php echo valToJavascriptVar( "numBuggyImplementations", count(get($runResults,0,array()))), "\n"; ?>
     insertCase('sig', true );
-    for (var i=0;  i in tests;  ++i) {
+    for (var i=0;  i < numTests;  ++i) {
       insertCase('tests', tests[i], runResults[i], bugsMissed );
       }
-    if (! (0 in tests)) insertCase('tests', {});  // An initial blank row.
+    if (numTests == 0) insertCase('tests', {});  // An initial blank row.
   </script>
 
+
+  <p id='resultsPar'></p>
+
+  <script>
+  var msg = "JavaTea Error: message not yet initialzied";
+  if (numTests>0) {
+    msg = (numBugsMissed==0) ? "Congratulations -- no" : "Uh-oh -- "+numBugsMissed;
+    msg += " buggy implementation" + (numBugsMissed==1 ? "" : "s") + " managed to pass";
+    msg += " your test cases!"
+    }
+  else {
+    msg  = "Please create test-cases for this function: the inputs, and the desired result.<br/>";
+    msg += "  Make (just) enough test-cases so that you'll detect any bugs in other people's code.";
+    msg += "  If any buggy implementations manage to pass all your tests undetected,";
+    msg += " then your tests are incomplete!";
+    }
+  document.getElementById('resultsPar').appendChild( document.createTextNode(msg) );
+  </script>
 
 
 <hr/>
