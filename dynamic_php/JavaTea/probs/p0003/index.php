@@ -7,11 +7,10 @@
 ?>
 
 <?php
-  $probID = "p0001";
-  $functionPurpose = "Triple a number.";
-
-  $sig = Array( Array("name"=>"timesThree", "type" => "double") // [0] is the function name/return-type.
-              , Array("name"=>"x", "type" => "double")          // 1st parameter
+  $probID = "p0003";
+  $functionPurpose = "Tell whether a string is a palindrome: that is, whether it reads exactly the same when reversed letter-for-letter.";
+  $sig = Array( Array("name"=>"isPalindrome", "type" => "boolean") // [0] is the function name/return-type.
+              , Array("name"=>"s", "type" => "String")          // 1st parameter
               );
   // Yes, it might be more php-ish to say
   //   $sig = Array( "timesThree" => "double", "x" => "double");
@@ -24,8 +23,8 @@
   // 
   // E.g. "foo", and incorrect "foo_bug_A", "foo_bug_willDivBy0", "foo_bug_rare"
   //
-  $buggySolns = array('A','B','C');
+  $buggySolns = array('A','B','C','D','E');
   $BUGGY_SUFFIX_DELIMITER = '_bug_';
-  $equalityTest="==";  // or, .equals ?
+  $equalityTest="==";  // Use "==" or ".equals", presumably.
   require( "$projRootDir/probs/probs-inc.php" );
 ?>

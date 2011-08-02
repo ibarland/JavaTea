@@ -7,11 +7,11 @@
 ?>
 
 <?php
-  $probID = "p0001";
-  $functionPurpose = "Triple a number.";
+  $probID = "p0002";
+  $functionPurpose = "Return a string just like <code>s</code>, but with all the letters reversed.";
 
-  $sig = Array( Array("name"=>"timesThree", "type" => "double") // [0] is the function name/return-type.
-              , Array("name"=>"x", "type" => "double")          // 1st parameter
+  $sig = Array( Array("name"=>"reverseString", "type" => "String") // [0] is the function name/return-type.
+              , Array("name"=>"s", "type" => "String")          // 1st parameter
               );
   // Yes, it might be more php-ish to say
   //   $sig = Array( "timesThree" => "double", "x" => "double");

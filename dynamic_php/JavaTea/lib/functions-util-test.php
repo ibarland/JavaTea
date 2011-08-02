@@ -55,4 +55,9 @@ echo "Actual:";
 print_r( array2D_map( sqrt, array(array(1,4,9), array(4,16,36)) ) );
 echo "Expected:";
 print_r( array(array(1,2,3), array(2, 4, 6)) );
+
+echo "Actual:";
+print_r( array2D_map( stripslashes, array(array("abc","d\\\"e"), array("a\\\\b","x\\\'y")) ) );
+echo "Expected:";
+print_r( array(array("abc","d\"e"), array( "a\\b", "x\'y") ) );
 ?>

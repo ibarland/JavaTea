@@ -3,12 +3,12 @@ class ReverseString {
   String reverseString( String s ) {
     String result = "";
     for (int i=0;  i < s.length();  ++i) {
-      result += s.charAt(s.length()-i);
+      result += s.charAt(s.length()-i-1);
       }
     return result;
     }
 
-  String bad001( String s ) {
+  String reverseString_bug_A( String s ) {
     String result = "";
     for (int i=0;  i > s.length();  ++i) {
       result += s.charAt(s.length()-i);
@@ -16,8 +16,7 @@ class ReverseString {
     return result;
     }
 
-
-  String bad002( String s ) {
+  String reverseString_bug_B( String s ) {
     String result = "";
     for (int i=0;  i < s.length();  ++i) {
       result += s.charAt(i);
@@ -25,9 +24,11 @@ class ReverseString {
     return result;
     }
 
-
-
-
-
-
-}
+  String reverseString_bug_C( String s ) {
+    String result = "";
+    result += s.charAt( s.length() -1 );
+    for (int i=1;  i < s.length();  ++i) {
+      result += s.charAt(s.length()-i);
+      }
+    return result;
+    }
