@@ -22,21 +22,13 @@
   //  to an element of $buggySolns (with $BUGGY_SUFFIX_DELIMITER in between).
   // 
   // E.g. "foo", and incorrect "foo_bug_A", "foo_bug_willDivBy0", "foo_bug_rare"
-  $BUGGY_SUFFIX_DELIMITER = "_bug_";
-  $buggySolns = Array('A','B','C');
-
-  // Now, modify $buggySolns for internal use: map-prepend the delimiter, and include one non-buggy-call.
-  foreach ($buggySolns as $i => $suffix) {
-    $buggySolns[$i] = $BUGGY_SUFFIX_DELIMITER . $suffix;
-    }
-  array_unshift( $buggySolns, '' );  // Our own code expects the good sol'n to be first.
-
-  // javascript: outside version is an actual array; contents are objs w/ (two) properties.
-  //   { 0 : {name:"timesThree", type:"double"}, 1 : {name:"x", type:"double"} }
   //
-  echo enscript( "var signature = " . toJsString($sig) . ';' );
-  echo enscript( "var tests = " . toJsString(get($_POST,'tests',Array())) . ';' );
-
+  
+  // ARG, rucs's php is old version w/o no anonymous functions!
+  //$buggySolns = $array_map( function($itm) {return "_bug_$itm";}, array('A','B','C') );
+  $buggySolns = array_map( create_function('$itm', 'return "_bug_$itm";'), array('A','B','C') );
+  
+  array_unshift( $buggySolns, '' );  // Our own code expects the good sol'n to be first.
 
   function javaTeaErr( $msg ) {
     echo "<span class='fatal'>JavaTea Error: $msg.</span><br />\n";
@@ -263,8 +255,8 @@ END_JAVA_SEGMENT;
   function anotherCaseAsTr( data ) {
       var asSignature = (typeof(data) !== "object");
       var existingTests = document.getElementById('tests').children;
-      if (!existingTests && !asSignature) javateaWarn("<?php echo(__FILE__);?>","anotherCase","Adding test cases before table-of-tests is defined.");
-      var caseNum = (existingTests ? existingTests.length : 0);
+      //if (!existingTests && !asSignature) javateaWarn("<?php echo(__FILE__);?>","anotherCase","Adding test cases before table-of-tests is defined.");
+      var caseNum = (existingTests ? existingTests.length-1 : 0); // *** HACK The bugIconRow
       var tstCase = document.createElement('tr');
       // Provide an id (for the entire row, not just one of the input box), 
       // in case we want to delete row later:
@@ -284,6 +276,24 @@ END_JAVA_SEGMENT;
       return tstCase;
       }
 
+
+
+
+    function insertBugIconsRow( node, bugsMissed ) {
+      var theRow = document.createElement('tr');
+      <?php $numCellsForSig = 3*count($sig)-1-(count($sig)>1 ? 1 : 0)+2+1+1; ?>
+      for (var i=0;  i < <?php echo $numCellsForSig; ?>;  ++i) {
+        theRow.appendChild( td("") );
+        }
+      for (var i=0;  i < numBuggyImplementations;  ++i) {
+        theIcon = document.createElement('img');
+        theIcon.setAttribute('src', bugIcons[i % bugIcons.length]);
+        theIcon.setAttribute('width', BUG_ICON_WIDTH );
+        theIcon.setAttribute('class', 'bug-icon' );
+        theRow.appendChild( td(theIcon) );
+        }
+      document.getElementById(node).appendChild( theRow );
+      }
 
    
     function resultsStyle( testPassed, bugMissed ) {
@@ -319,6 +329,18 @@ END_JAVA_SEGMENT;
       var firstArgInputBox = document.getElementById( latestTestCase.getAttribute("id") + "[1]" );
       if (firstArgInputBox) firstArgInputBox.focus();
       }
+
+
+  var BUG_ICON_WIDTH = '40px';
+  var bugIcons = [
+     'free-clipart-pictures.net/insect_clipart_fly.gif'
+    ,'freeclipartnow.com/ladybug-abstracted.jpg'
+    ,'free-clipart-pictures.net/insect_clipart_spider.gif'
+    ,'free-clipart-pictures.net/insect_clipart_snail.gif'
+    ,'free-clipart-pictures.net/insect_clipart_dragonfly.gif'
+    ,'freeclipartnow.com/amber-wing-dragonfly-female.jpg'
+    ,'freeclipartnow.com/lady-bug.jpg'
+                  ].map( function(itm) {return "<?php echo $projRootDir;?>/images/"+itm;} );
   </script>
  </head>
 
@@ -350,12 +372,20 @@ END_JAVA_SEGMENT;
   </form>  
 
   <script type="text/javascript">
-    <?php echo valToJavascriptVar( "runResults", $runResults ), "\n"; ?>
-    <?php echo valToJavascriptVar( "bugsMissed", $bugsThatPassed ), "\n"; ?>
-    <?php echo valToJavascriptVar( "numBugsMissed", count($bugsThatPassed) ), "\n"; ?>
-    <?php echo valToJavascriptVar( "numTests", count($runResults) ), "\n"; ?>
-    <?php echo valToJavascriptVar( "numBuggyImplementations", count(get($runResults,0,array()))), "\n"; ?>
+     // javascript: outside version is an actual array; contents are objs w/ (two) properties.
+     //   { 0 : {name:"timesThree", type:"double"}, 1 : {name:"x", type:"double"} }
+     //
+    <?php
+      echo valToJavascriptVar( "signature", $sig ), "\n";
+      echo valToJavascriptVar( "tests", get($_POST,'tests',Array())), "\n";
+      echo valToJavascriptVar( "runResults", $runResults ), "\n";
+      echo valToJavascriptVar( "bugsMissed", $bugsThatPassed ), "\n";
+      echo valToJavascriptVar( "numBugsMissed", count($bugsThatPassed) ), "\n";
+      echo valToJavascriptVar( "numTests", count($runResults) ), "\n";
+      echo valToJavascriptVar( "numBuggyImplementations", count(get($runResults,0,array('dummy')))-1), "\n";
+     ?>
     insertCase('sig', true );
+    if (numTests>0) insertBugIconsRow('tests',bugsMissed);
     for (var i=0;  i < numTests;  ++i) {
       insertCase('tests', tests[i], runResults[i], bugsMissed );
       }
@@ -363,18 +393,22 @@ END_JAVA_SEGMENT;
   </script>
 
 
-  <p id='resultsPar'></p>
+  <p id='resultsPar'>  <!-- TODO: make 3 marked-up paragraphs, and set two of them to invis. -->
+  </p>
 
   <script>
-  var msg = "JavaTea Error: message not yet initialzied";
+  var msg = "JavaTea Error: message not yet initialized.";
   if (numTests>0) {
     msg = (numBugsMissed==0) ? "Congratulations -- no" : "Uh-oh -- "+numBugsMissed;
     msg += " buggy implementation" + (numBugsMissed==1 ? "" : "s") + " managed to pass";
-    msg += " your test cases!"
+    msg += " every single one of your test cases!"
+    if (numBugsMissed > 3) {
+      msg += "  If we were counting on your tests to catch bugs, we'd have released the buggy versions and then have a lot of unhappy customers!";
+      }
     }
   else {
-    msg  = "Please create test-cases for this function: the inputs, and the desired result.<br/>";
-    msg += "  Make (just) enough test-cases so that you'll detect any bugs in other people's code.";
+    msg  = "Please create test-cases for this function: the inputs, and the desired result.\n";
+    msg += "  Create (just) enough test-cases so that you'll detect *any* bugs in other people's code.";
     msg += "  If any buggy implementations manage to pass all your tests undetected,";
     msg += " then your tests are incomplete!";
     }

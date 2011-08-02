@@ -164,7 +164,9 @@ if (!isset(__includedFiles)) { // Guard against *this* file being multi-included
 function enTag( tagName, attrs, bod ) {
   var newTag = document.createElement(tagName);
   for (var attrName in attrs) {
-    newTag.setAttribute( attrName, attrs[attrName] );
+    if (attrs.hasOwnProperty(attrName)) {
+      newTag.setAttribute( attrName, attrs[attrName] );
+      }
     }
   newTag.appendChild( isString(bod) ? document.createTextNode(bod) : bod ); 
   return newTag; 
