@@ -5,10 +5,17 @@ ini_set('display_startup_errors',true);
 //ini_set('error_log', dirname(__FILE__) . '/err.txt');
 error_reporting (E_ALL | E_STRICT); 
 
+if (!isset($projRootDir)) {
+  $depthThisFile = substr_count($_SERVER["PHP_SELF"],DIRECTORY_SEPARATOR);
+  $depthProjRoot = substr_count('/~itec120/JavaTea/',DIRECTORY_SEPARATOR);
+  $projRootDir = str_repeat('../', $depthThisFile - $depthProjRoot );
+  $projRootDir = rtrim($projRootDir,'/');
+  }
+
 define('ROOT_DIR', '/~itec120/JavaTea');
 
-require_once(  ROOT_DIR.'/lib/functions-util.php' );
-require_once(  ROOT_DIR.'/lib/functions-db.php' );
+require_once(  "$projRootDir/lib/functions-util.php" );
+require_once(  "$projRootDir/lib/functions-db.php" );
 
 
 ini_set('date.timezone','America/New_York');
@@ -46,7 +53,7 @@ echo "</p>\n";
 ****/
 
 
-require( ROOT_DIR . '/db-info.php' );  // get password.
+require( "$projRootDir/db-info.php" );  // get password.
 mysql_connect($db_host, $db_user, $db_pass) or die("Could not connect to db $db_host");
 mysql_select_db($db_schema) or die("Could not connect to schema $db_userselect.");
   
