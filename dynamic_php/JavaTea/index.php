@@ -2,7 +2,7 @@
   $depthThisFile = substr_count($_SERVER["PHP_SELF"],DIRECTORY_SEPARATOR);
   $depthProjRoot = substr_count('/~itec120/JavaTea/',DIRECTORY_SEPARATOR);
   $projRootDir = str_repeat('../', $depthThisFile - $depthProjRoot );
-  $projRootDir = rtrim($projRootDir,'/');
+  $projRootDir = ($projRootDir ? rtrim($projRootDir,'/') : '.');
 //require_once( "$projRootDir/templates/init.php" );
 //require_once( "templates/init.php" );
 ?>

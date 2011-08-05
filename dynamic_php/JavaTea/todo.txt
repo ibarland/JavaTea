@@ -1,0 +1,31 @@
+x equality test: allow for .equals
+
+- add new problems
+
+* add better bug_ versions, for existing problems.
+
+* godaddy/enom: stop the frame'ing
+
++ compile to a file depending on session name (or username, if logged in, or random?) 
+
++ investigate the timing
+
+- what to do about the 'duplicate' icon on home page?
+
+- fix up all the "***" in probs-inc.php
+
+- factor out the repeated equality-test (only two choices)
+
+- connect to db
+
+- wrap the *generated* code in try/catch (so that implementations don't have to worry)
+
+- on mouseover of 'fail', show the failed result.
+
+- add problem-sets
+
+- add "tool"tips about including quotes, for string-probs
+
+- add "tool"tips about allowing expressions, for numerics
+
+

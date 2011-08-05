@@ -24,8 +24,8 @@
   // 
   // E.g. "foo", and incorrect "foo_bug_A", "foo_bug_willDivBy0", "foo_bug_rare"
   //
-  $buggySolns = array('A','B','C');
+  $buggySolns = array('A','B','C','D','E','F');
   $BUGGY_SUFFIX_DELIMITER = '_bug_';
-  $equalityTest="==";  // or, .equals ?
+  $equalityTest = array( 'pre' => '',  'mid'=>'.equals(', 'post'=>')' );
   require( "$projRootDir/probs/probs-inc.php" );
 ?>

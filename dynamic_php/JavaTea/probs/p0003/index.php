@@ -25,6 +25,6 @@
   //
   $buggySolns = array('A','B','C','D','E');
   $BUGGY_SUFFIX_DELIMITER = '_bug_';
-  $equalityTest="==";  // Use "==" or ".equals", presumably.
+  $equalityTest= array( 'pre'=>'', 'mid'=>"==", 'post'=>'' );  // or, .equals ?
   require( "$projRootDir/probs/probs-inc.php" );
 ?>

@@ -43,12 +43,17 @@
     return $result;
     }
 
+  // *** Not called ?!?
   function testcaseAsString( $sig, $data, $suffix, $comment ) {
       //      print_r( $data );
       global $equalityTest;
-      $result = javaFuncCall( $sig, $data, $suffix );
-      $result .= $equalityTest;
-      $result .= $data[0] . ";";
+      $result = "";
+      $result .= $equalityTest['pre'];
+      $result .= javaFuncCall( $sig, $data, $suffix );
+      $result .= $equalityTest['mid'];
+      $result .= $data[0];
+      $result .= $equalityTest['post'];
+      $result .= ';';
       return $result . "  // " . $comment;
       }
 
@@ -244,7 +249,8 @@ END_JAVA_SEGMENT;
       // Provide an id (for the entire row, not just one of the input box), 
       // in case we want to delete row later:
       if (!asSignature) { tstCase.setAttribute('id', 'tests['+caseNum+']' ); } 
-      tstCase.appendChild( td( asSignature ? signature[0].type : "" ) );
+      tstCase.appendChild( td( asSignature ? signature[0].type 
+                                           : "<?php echo "${equalityTest['pre']}"; ?>" ) );
       tstCase.appendChild( td(signature[0].name) );
       tstCase.appendChild( td("(") );
       for (var i=1;  i in signature;  ++i) {
@@ -253,8 +259,9 @@ END_JAVA_SEGMENT;
         tstCase.appendChild( asSignature ? td(signature[i].name) : argInputBox(caseNum,i,data[i] || "") );
         }
       tstCase.appendChild( td(")") );
-      tstCase.appendChild( td( asSignature ? "" : "<?php echo "$equalityTest"; ?>" ) );
+      tstCase.appendChild( td( asSignature ? "" : "<?php echo "${equalityTest['mid']}"; ?>" ) );
       tstCase.appendChild( asSignature ? td("") : argInputBox(caseNum,0,data[0] || "") );
+      tstCase.appendChild( td( asSignature ? "" : "<?php echo "${equalityTest['post']}"; ?>" ) );
       //tstCase.appendChild( asSignature ? td("") : delRowButton() );
       return tstCase;
       }
@@ -264,7 +271,7 @@ END_JAVA_SEGMENT;
 
     function insertBugIconsRow( node, bugsMissed ) {
       var theRow = document.createElement('tr');
-      <?php $numCellsForSig = 3*count($sig)-1-(count($sig)>1 ? 1 : 0)+2+1+1; ?>
+      <?php $numCellsForSig = 3*count($sig)-1-(count($sig)>1 ? 1 : 0)+2+1+1+1; ?>  // *** should really make a dummy row, and count domNode.children ?
       for (var i=0;  i < <?php echo $numCellsForSig; ?>;  ++i) {
         theRow.appendChild( td("") );
         }
