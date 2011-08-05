@@ -330,6 +330,9 @@ END_JAVA_SEGMENT;
     ,'free-clipart-pictures.net/insect_clipart_dragonfly.gif'
     ,'freeclipartnow.com/amber-wing-dragonfly-female.jpg'
     ,'freeclipartnow.com/lady-bug.jpg'
+    ,'free-clipart-pictures.net/butterfly_clipart_pink.gif'
+    ,'freeclipartnow.com/preying-mantis-close.jpg'
+    ,'free-clipart-pictures.net/butterfly_clipart_gray.gif'
                   ].map( function(itm) {return "<?php echo $projRootDir;?>/images/"+itm;} );
   </script>
  </head>

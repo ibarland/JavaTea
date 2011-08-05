@@ -37,13 +37,13 @@ class ReverseString {
     }
 
   static String reverseString_bug_D( String s ) {
-    // Fails on odd-length strings (but not for want of trying!)
+    // Fails on odd-length strings: misses the last char
     String firstHalf  = "";
     String secondHalf = "";
     int halfLen = s.length()/2;
     for (int i=0;  i < halfLen;  ++i) {
-      firstHalf  += s.charAt(s.length()-i-1);
-      secondHalf += s.charAt(s.length()-i-1-halfLen);
+      firstHalf  += s.charAt(s.length()-1-i);
+      secondHalf += s.charAt(s.length()-1-(i+halfLen));
       }
     return firstHalf + secondHalf;
     }
@@ -52,19 +52,19 @@ class ReverseString {
     // Fails on even-length strings (but not for want of trying!)
     String firstHalf  = "";
     String secondHalf = "";
-    String missingMiddle = "";
-    int halfLen = (s.length()-1)/2;
+    String missingLast = "";
+    int halfLen = (s.length())/2;
     for (int i=0;  i < halfLen;  ++i) {
-      firstHalf  += s.charAt(s.length()-i-1);
-      secondHalf += s.charAt(s.length()-i-halfLen);
+      firstHalf  += s.charAt(s.length()-1-i);
+      secondHalf += s.charAt(s.length()-1-(i+halfLen));
       }
     try {
-      missingMiddle += s.charAt( halfLen );
+      missingLast += s.charAt( 0 );
       }
     catch (StringIndexOutOfBoundsException e) {
-      missingMiddle += 'z';  // Replace the crash with a wrong result.
+      missingLast += 'z';  // Replace the crash with a wrong result.
       }
-    return firstHalf + missingMiddle + secondHalf;
+    return firstHalf + secondHalf+ missingLast;
     }
 
   static String reverseString_bug_F( String s ) {
