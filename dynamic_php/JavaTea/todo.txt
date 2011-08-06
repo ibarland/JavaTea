@@ -2,9 +2,9 @@ x equality test: allow for .equals
 
 - add new problems
 
-* add better bug_ versions, for existing problems.
+x add better bug_ versions, for existing problems.
 
-* godaddy/enom: stop the frame'ing
+x godaddy/enom/google-sites: stop the frame'ing
 
 + compile to a file depending on session name (or username, if logged in, or random?) 
 

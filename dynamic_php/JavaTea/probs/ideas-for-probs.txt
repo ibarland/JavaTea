@@ -1,0 +1,6 @@
+- hasSuffix;   and/or, is a filename an image file?
+   [".jpeg", "jpeg"; case-sensitivity; ]
+- any JavaBat problem...
+- extract the third string in a line of a simple csv file [no commas, quotes, or newlines in the data]
+- extract the third string in a line of a full csv file [possible commas, quotes, or newlines in the data]
+
