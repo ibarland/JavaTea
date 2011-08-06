@@ -1,7 +1,9 @@
 <?php
   /* Generate a JavaTea page.
    * PRE-CONDITIONS:  The following must be defined:
-   * $sig, $functionPurpose, $equalityTest, $buggySolns, $BUGGY_SUFFIX_DELIMITER, and $projRootDir
+   * $sig, $functionPurpose, $equalityTest, $buggySolns, $BUGGY_SUFFIX_DELIMITER, 
+   *  and $projRootDir, $probID
+   * (and, $_POST, containing tests[][] ).
    */
 
 
@@ -43,19 +45,21 @@
     return $result;
     }
 
-  // *** Not called ?!?
-  function testcaseAsString( $sig, $data, $suffix, $comment ) {
+  // *** Not called ?!?   
+  // *** Wait-- is php not case-sense?; is that why it still worked w/ the wrong-case call?
+  function testCaseAsString( $codeToLookupActualResult, $codeToLookupDesiredResult ) {
       //      print_r( $data );
       global $equalityTest;
       $result = "";
       $result .= $equalityTest['pre'];
-      $result .= javaFuncCall( $sig, $data, $suffix );
+      $result .= $codeToLookupActualResult;
       $result .= $equalityTest['mid'];
-      $result .= $data[0];
+      $result .= $codeToLookupDesiredResult;
       $result .= $equalityTest['post'];
-      $result .= ';';
-      return $result . "  // " . $comment;
+      return $result;
       }
+
+
 
   /********************/
   //  Begin the creating/running of the Java tests
@@ -64,6 +68,8 @@
   $tests = array2D_map( create_function('$s','return stripslashes($s);'), 
                         get($_POST, "tests", Array()) );  // stripslashes to undo magic quotes
   $tests = array2D_map( create_function('$s','return stripslashes($s);'), $tests );  // *** ?!@?
+  // (a) Why can't I just pass stripslashes directly?
+  // (b) why did the server[?] addslashes *twice*??
   $numTests = count($tests);
   $numBuggySolns = count($buggySolns);
 
@@ -73,36 +79,46 @@ echo <<<END_JAVA_SEGMENT
 class Test${className} {
 
   public static boolean[][] runTests() {
-    // An array of test-case x buggy-soln (whether or not the test-case passed).
-    boolean[][] results = new boolean[$numTests][$numBuggySolns];
+    // An array of actual-results of calling each test: test-case x buggy-soln 
+    {$sig[0]['type']}[][] funcResults = new {$sig[0]['type']}[$numTests][$numBuggySolns];
+    // An array of whether or not the test-case passed: test-case x buggy-soln 
+    boolean[][] testResults = new boolean[$numTests][$numBuggySolns];
 
 END_JAVA_SEGMENT;
 
   echo "    // parallel arrays: one for each argument (and arg0 for the result).\n";
   foreach ($sig as $argNum => $paramSig) {
-    echo "    ${paramSig['type']}[] arg$argNum = new ${paramSig['type']}[$numTests];\n";
+    echo "    {$paramSig['type']}[] arg$argNum = new ${paramSig['type']}[$numTests];\n";
     }
 
   echo "    // Eval each expression, caching results in arg_i.\n";
-  $evaldArgLookupCode = array();  // java-source-as-string: code to just look up an array element.
+  $codeToLookupEvaldArg = array();  // java-source-as-string: code to just look up an array element.
   foreach ($tests as $i => $testI) {
     foreach ($sig as $argNum => $paramSig) {
-      echo "    arg${argNum}[$i] = (".($tests[$i][$argNum]).");\n"; // *** magic quoting
-      $evaldArgLookupCode[$i][$argNum]  = "arg${argNum}[$i]";
+      $codeToLookupEvaldArg[$i][$argNum]  = "arg${argNum}[$i]";
+      echo "    {$codeToLookupEvaldArg[$i][$argNum]} = (".($tests[$i][$argNum]).");\n"; // *** addslashes here, but only quote '\', not any '"' etc.
       }
     echo "\n";
     }
 
+  // Now, [generate java code to] compare results with expected results:
   foreach ($tests as $i => $testI) {
     foreach ($buggySolns as $buggySolnIdx => $buggySoln) {
-      echo "    results[$i][$buggySolnIdx] = ";
-      echo testCaseAsString($sig, $evaldArgLookupCode[$i], $buggySoln, "test #$i" ), "\n";
+      // generate code to: Call the function, and store results in funcResults[][]
+      echo "    funcResults[$i][$buggySolnIdx] = ";
+      echo javaFuncCall($sig, $codeToLookupEvaldArg[$i], $buggySoln);
+      echo ";\n";
+
+      // generate code to: Check whether the actual results matched the desired result.
+      echo "    testResults[$i][$buggySolnIdx] = ";
+      echo testCaseAsString( "funcResults[$i][$buggySolnIdx]", $codeToLookupEvaldArg[$i][0] );
+      echo ";\n";
       }
     echo "\n";
    }
 
 echo <<<END_JAVA_SEGMENT
-    return results;
+    return testResults;
     }
 
 

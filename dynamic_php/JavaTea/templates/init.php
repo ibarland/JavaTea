@@ -54,7 +54,9 @@ echo "</p>\n";
 
 
 require( "$projRootDir/db-info.php" );  // get password.
-mysql_connect($db_host, $db_user, $db_pass) or die("Could not connect to db $db_host");
-mysql_select_db($db_schema) or die("Could not connect to schema $db_userselect.");
+if (!isset($OFFLINE_TESTING_MODE)) {
+  mysql_connect($db_host, $db_user, $db_pass) or die("Could not connect to db $db_host");
+  mysql_select_db($db_schema) or die("Could not connect to schema $db_userselect.");
+  }
   
 ?>
