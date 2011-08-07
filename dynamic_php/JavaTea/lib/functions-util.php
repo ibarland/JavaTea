@@ -162,7 +162,7 @@ function array2DToHTMLTable( $arr2D, $colHeaders = null) {
     $res .= "  var $jsVarName = ";
     $res .= toJsString($phpVal);
     $res .= ";";
-    return $res;
+    return $res . "\n";
     }
 
 

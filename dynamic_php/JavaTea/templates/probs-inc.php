@@ -60,7 +60,6 @@
       }
 
 
-
   /********************/
   //  Begin the creating/running of the Java tests
   $probName = $sig[0]['name'];
@@ -131,11 +130,13 @@ echo <<<END_JAVA_SEGMENT
 END_JAVA_SEGMENT;
 
   $prog = ob_get_clean();
-  $JRE_HOME = "/home/itec120/dynamic_php/JavaTea/lib/java";
+  //$JRE_HOME = "/home/itec120/dynamic_php/JavaTea/lib/java";   *** delete once next line tested
+  $JRE_HOME = "$projRootDir/lib/java";
 
   $testClassName = "Test" . $className;
-  $javaSourceFileName = $testClassName . ".java";
   $javaClassFileName = $testClassName . ".class";
+  $javaTestingDir = "dir" + session_id();
+  $javaSourceFileName = /*$javaTestingDir . DIRECTORY_SEPARATOR .*/ $testClassName . ".java";  // *** fix this once we can look up php api for mkdir etc
   if (file_exists($javaClassFileName)) { unlink( $javaClassFileName ); }
   fwrite( fopen( $javaSourceFileName, 'w' ), $prog );
   if (!file_exists($javaSourceFileName)) { javaTeaErr( 'Source file not created' ); }
@@ -149,6 +150,8 @@ END_JAVA_SEGMENT;
     echo "<span class='fatal'>Error compiling file:</span>\n";
     echo $runResultsPipes["stderr"];
     }
+  my_exec( "rm -f '$javaSourceFileName'" );
+  my_exec( "rm -f '$javaClassFileName'" );
   // see php escapeshellarg(), escapeshellcmd()
   // Hack: parse the string as 2-D array of bools.
   // A better solution would have the Java output a string in php syntax.
@@ -385,13 +388,13 @@ END_JAVA_SEGMENT;
      //   { 0 : {name:"timesThree", type:"double"}, 1 : {name:"x", type:"double"} }
      //
     <?php
-      echo valToJavascriptVar( "signature", $sig ), "\n";
-      echo valToJavascriptVar( "tests", $tests ), "\n"; //get($_POST,'tests',Array())), "\n";
-      echo valToJavascriptVar( "runResults", $runResults ), "\n";
-      echo valToJavascriptVar( "bugsMissed", $bugsThatPassed ), "\n";
-      echo valToJavascriptVar( "numBugsMissed", count($bugsThatPassed) ), "\n";
-      echo valToJavascriptVar( "numTests", count($runResults) ), "\n";
-      echo valToJavascriptVar( "numBuggyImplementations", count(get($runResults,0,array('dummy')))-1), "\n";
+      echo valToJavascriptVar( "signature", $sig );
+      echo valToJavascriptVar( "tests", $tests ), "\n"; //get($_POST,'tests',Array()));
+      echo valToJavascriptVar( "runResults", $runResults );
+      echo valToJavascriptVar( "bugsMissed", $bugsThatPassed );
+      echo valToJavascriptVar( "numBugsMissed", count($bugsThatPassed) );
+      echo valToJavascriptVar( "numTests", count($runResults) );
+      echo valToJavascriptVar( "numBuggyImplementations", count(get($runResults,0,array('dummy')))-1);
      ?>
     insertCase('sig', true );
     if (numTests>0) insertBugIconsRow('tests',bugsMissed);
@@ -424,51 +427,5 @@ END_JAVA_SEGMENT;
   document.getElementById('resultsPar').appendChild( document.createTextNode(msg) );
   </script>
 
-
-<hr/>
-
   </body>
-
-
-
-  <script type="text/javascript">
-
-/*
-
-Test #3: Bad spec ( f(17,23) = 43 (desired output), not 443 as provided)
-
-
-timesThree_bad_v1's mistake was caught by test #3.
-timesThree_bad_v2 has a bug, yet it passed all provided tests!
-
-
-Test #1: Succeeded (actual and desired result is 43)
-Test #2: Failed    (actual and desired result is 43)
-
-
-*/
-
-
-
-/*
-  Links on parsing Java code:
-    http://stackoverflow.com/questions/5993769/java-parser-written-in-javascript
-    http://en.wikipedia.org/wiki/Comparison_of_JavaScript-based_source_code_editors
-
-  Suggestions:
-  - ANTLR;
-  - Try a syntax-colorer instead of full parser?
- */ 
-
-
-
-    /*
-    - A .js AST library:  http://substack.net/posts/eed898
-    - .js: use eval() or eval.call(  aNSArray, anExpr) ; if the Expr includes "*var* x = ...",
-       that'll keep x local to ...that namesapce?  That expr?  The enclosing function???
-       Another approach: all variables are actually object-attributes.
-    - javax code to eval javascript:
-        http://stackoverflow.com/questions/3422673/java-evaluate-string-to-math-expression
-     */
-</script>
 </html>

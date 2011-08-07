@@ -29,3 +29,46 @@ x godaddy/enom/google-sites: stop the frame'ing
 - add "tool"tips about allowing expressions, for numerics
 
 
+
+
+
+  <script type="text/javascript">
+
+/*
+
+Test #3: Bad spec ( f(17,23) = 43 (desired output), not 443 as provided)
+
+
+timesThree_bad_v1's mistake was caught by test #3.
+timesThree_bad_v2 has a bug, yet it passed all provided tests!
+
+
+Test #1: Succeeded (actual and desired result is 43)
+Test #2: Failed    (actual and desired result is 43)
+
+
+*/
+
+
+
+/*
+  Links on parsing Java code:
+    http://stackoverflow.com/questions/5993769/java-parser-written-in-javascript
+    http://en.wikipedia.org/wiki/Comparison_of_JavaScript-based_source_code_editors
+
+  Suggestions:
+  - ANTLR;
+  - Try a syntax-colorer instead of full parser?
+ */ 
+
+
+
+    /*
+    - A .js AST library:  http://substack.net/posts/eed898
+    - .js: use eval() or eval.call(  aNSArray, anExpr) ; if the Expr includes "*var* x = ...",
+       that'll keep x local to ...that namesapce?  That expr?  The enclosing function???
+       Another approach: all variables are actually object-attributes.
+    - javax code to eval javascript:
+        http://stackoverflow.com/questions/3422673/java-evaluate-string-to-math-expression
+     */
+</script>
