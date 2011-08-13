@@ -6,6 +6,12 @@
    * (and, $_POST, containing tests[][] ).
    */
 
+ 
+  $time0 = time();
+  $debugProgressTimer = '(sync at ' . time() . ")\n";
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point A\n";
+  //recordDiagnosticTime(__FILE__);
+
 
   // ARG, rucs's php is old version w/o no anonymous functions!
   // $buggySolns = $array_map( function($itm) {return "_bug_$itm";}, array('A','B','C') );
@@ -59,6 +65,7 @@
       return $result;
       }
 
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point B\n";
 
   /********************/
   //  Begin the creating/running of the Java tests
@@ -130,6 +137,7 @@ echo <<<END_JAVA_SEGMENT
 END_JAVA_SEGMENT;
 
   $prog = ob_get_clean();
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point C\n";
   //$JRE_HOME = "/home/itec120/dynamic_php/JavaTea/lib/java";   *** delete once next line tested
   $JRE_HOME = "$projRootDir/lib/java";
 
@@ -137,21 +145,29 @@ END_JAVA_SEGMENT;
   $javaClassFileName = $testClassName . ".class";
   $javaTestingDir = "dir" + session_id();
   $javaSourceFileName = /*$javaTestingDir . DIRECTORY_SEPARATOR .*/ $testClassName . ".java";  // *** fix this once we can look up php api for mkdir etc
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point D\n";
   if (file_exists($javaClassFileName)) { unlink( $javaClassFileName ); }
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point E\n";
   fwrite( fopen( $javaSourceFileName, 'w' ), $prog );
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point F\n";
   if (!file_exists($javaSourceFileName)) { javaTeaErr( 'Source file not created' ); }
   $compileResultsPipe = my_exec( "$JRE_HOME/bin/javac $javaSourceFileName" );
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point G\n";
   reportAnyCompileErrors( $compileResultsPipe["stderr"] );
   if (!file_exists($javaClassFileName)) { javaTeaErr( 'Class file not created' ); }
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point H\n";
 
   $runResultsPipes = my_exec( "$JRE_HOME/bin/java -Djava.security.manager $testClassName" );
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point I\n";
   $runResultsStr0 = $runResultsPipes["stdout"];
   if ($runResultsPipes["stderr"]) {
     echo "<span class='fatal'>Error compiling file:</span>\n";
     echo $runResultsPipes["stderr"];
     }
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point J\n";
   my_exec( "rm -f '$javaSourceFileName'" );
   my_exec( "rm -f '$javaClassFileName'" );
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point K\n";
   // see php escapeshellarg(), escapeshellcmd()
   // Hack: parse the string as 2-D array of bools.
   // A better solution would have the Java output a string in php syntax.
@@ -159,6 +175,7 @@ END_JAVA_SEGMENT;
   $runResultsStr1 = str_replace( '[', 'array(', $runResultsStr0 );
   $runResultsStr2 = str_replace( ']', ')', $runResultsStr1 );
   eval( '$runResults = ' . $runResultsStr2 . ';' );  // Parse string to array.
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point L\n";
   
   
   //echo array2DToHTMLTable($runResults);
@@ -183,8 +200,10 @@ END_JAVA_SEGMENT;
     }
 
 
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point L\n";
   $testsWereValid = (count(findInColumn($runResults,0,false,false)) > 0);
   $bugsThatPassed = bugsMissed($runResults);
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point M\n";
 
   
 
@@ -359,7 +378,9 @@ END_JAVA_SEGMENT;
 
  <body>
 <?php
+    $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point N\n";
   include( "$projRootDir/templates/header-inc.php" );
+  $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point O\n";
 ?>
     <p class='description'>
     <code><table><tr id="sig" class='description'/></table>
@@ -427,5 +448,11 @@ END_JAVA_SEGMENT;
   document.getElementById('resultsPar').appendChild( document.createTextNode(msg) );
   </script>
 
+<?php
+    $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point P\n";
+    echo "Debug results: " . $debugProgressTimer;
+?>
+
+    <pre><?php echo($diagnostics['timings']); ?> </pre>
   </body>
 </html>

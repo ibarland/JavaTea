@@ -23,11 +23,11 @@ include('templates/header-inc.php');
 <h4>A web-based tool for teaching beginning programmers to write good (unit) test cases.</h4>
 
 <p>
-     The JavaTea site is not yet ready for full use; 
-     it is currently a demo.
-     Support for 
-     logins, assignments, and reasonable error messages will be 
+     The JavaTea site is not yet ready for full use; it is currently a demo.
+     It will be ready for pre-release (non-robust) use 2011.Sep.01; support for
+     logins, assignments, and reasonable error messages will be
      implemented over the next several months (2011.Aug-Nov).
+     Feedback is welcome; a feedback form will be added.
 </p>
 <p>
      Future features include 

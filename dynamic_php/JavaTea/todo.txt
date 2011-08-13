@@ -1,24 +1,37 @@
-x equality test: allow for .equals
+. compile to a file depending on session name (or username, if logged in, or random?) 
+
+- wrap the *generated* code in try/catch (so that implementations don't have to worry)
+
+- investigate the timing
+
+- fix up all the "***" in probs-inc.php
 
 - add new problems
 
 x add better bug_ versions, for existing problems.
 
+x equality test: allow for .equals
+
 x godaddy/enom/google-sites: stop the frame'ing
-
-+ compile to a file depending on session name (or username, if logged in, or random?) 
-
-+ investigate the timing
-
-- what to do about the 'duplicate' icon on home page?
-
-- fix up all the "***" in probs-inc.php
 
 - factor out the repeated equality-test (only two choices)
 
+- rename each index.php to p0003.php, and link.
+
+- calculate dist-to-root by repeated cd'ing until finding a sentinel file  (that way, if moving the project, you don't need to change the first line of each file)  [perhaps, terms-of-use.txt ?]
+  $projRootDir = "";
+  $depthThisFile = substr_count($_SERVER["PHP_SELF"],DIRECTORY_SEPARATOR);
+  $depthProjRoot = 0;
+  while (!file_exists("$projRootDir/$rootSentinel") && ($depthThisFile <= $depthProjRoot)) {
+    $projRootDir = '../' . $projRootDir;
+    ++$depthProjRoot;
+    }
+  $projRootDir = ($projRootDir ? rtrim($projRootDir,'/') : '.');
+
+
 - connect to db
 
-- wrap the *generated* code in try/catch (so that implementations don't have to worry)
+- what to do about the 'duplicate' icon on home page?
 
 - on mouseover of 'fail', show the failed result.
 
