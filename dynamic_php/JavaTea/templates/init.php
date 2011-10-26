@@ -7,12 +7,12 @@ error_reporting (E_ALL | E_STRICT);
 
 if (!isset($projRootDir)) {
   $depthThisFile = substr_count($_SERVER["PHP_SELF"],DIRECTORY_SEPARATOR);
-  $depthProjRoot = substr_count('/~itec120/JavaTea/',DIRECTORY_SEPARATOR);
+  $depthProjRoot = substr_count('/itec120/JavaTea/',DIRECTORY_SEPARATOR);
   $projRootDir = str_repeat('../', $depthThisFile - $depthProjRoot );
   $projRootDir = rtrim($projRootDir,'/');
   }
 
-define('ROOT_DIR', '/~itec120/JavaTea');
+define('ROOT_DIR', '/itec120/JavaTea');
 
 require_once(  "$projRootDir/lib/functions-util.php" );
 require_once(  "$projRootDir/lib/functions-db.php" );

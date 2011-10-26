@@ -10,7 +10,7 @@
   $time0 = time();
   $debugProgressTimer = '(sync at ' . time() . ")\n";
   $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point A\n";
-  //recordDiagnosticTime(__FILE__);
+//   recordDiagnosticTime(__FILE__);
 
 
   // ARG, rucs's php is old version w/o no anonymous functions!
@@ -386,7 +386,7 @@ END_JAVA_SEGMENT;
     <code><table><tr id="sig" class='description'/></table>
     </code>
     <br/>
-      Purpose: <?php echo $functionPurpose; ?>
+      Purpose: <?php echo nl2br($functionPurpose); ?>
     </p>
 
   <form action="<?php echo "$projRootDir/probs/$probID/index.php" ?>" method="post">
@@ -450,9 +450,9 @@ END_JAVA_SEGMENT;
 
 <?php
     $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point P\n";
-    echo "Debug results: " . $debugProgressTimer;
+    echo "<pre>" . "Debug results: " . $debugProgressTimer . "</pre>";
 ?>
 
-    <pre><?php echo($diagnostics['timings']); ?> </pre>
+    <pre><?/*php echo($diagnostics['timings']);*/ ?> </pre>
   </body>
 </html>

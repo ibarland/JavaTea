@@ -52,13 +52,13 @@ please contact me.  &mdash; <tt>ib ar la nd AT ra df or d DOT ed u</tt>
 <h3>Sample problems</h3>
 <ul>
   <li>
+    <a href="probs/p0004/"><code>pluralize</code></a>
+  </li>
+  <li>
     <a href="probs/p0003/"><code>isPalindrome</code></a>
   </li>
   <li>
     <a href="probs/p0002/"><code>reverse</code></a>
-  </li>
-  <li>
-    <a href="probs/p0001/"><code>triple</code></a>
   </li>
 </ul>
 
