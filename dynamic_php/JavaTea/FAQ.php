@@ -1,5 +1,6 @@
 <?php
-include 'init.php';
+include_once( 'templates/init.php' );
+include( 'templates/header-inc.php' );
 ?>
 
 <html><head><title>JavaTea FAQ</title></head>

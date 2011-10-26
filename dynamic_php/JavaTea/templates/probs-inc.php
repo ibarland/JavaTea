@@ -252,9 +252,9 @@ END_JAVA_SEGMENT;
      *    If a String, it'll be wrapped in a createTextNode.
      * @return a td node with the given body.
      */
-    var td = function(bod,class) { 
-      return enTag( 'td',  (class ? {'class':class} : {}),  bod ); 
-      }.defaults(/*class=*/null);
+    var td = function(bod,clss) { 
+      return enTag( 'td',  (clss ? {'class':clss} : {}),  bod ); 
+      }.defaults(/*clss=*/null);
 
 
     /** Return an `input` tag for taking test-case values.
@@ -450,7 +450,7 @@ END_JAVA_SEGMENT;
 
 <?php
     $debugProgressTimer .= (time()-$time0) . " - probs-inc.php, point P\n";
-    echo "<pre>" . "Debug results: " . $debugProgressTimer . "</pre>";
+    //echo "<pre>" . "Debug results: " . $debugProgressTimer . "</pre>";
 ?>
 
     <pre><?/*php echo($diagnostics['timings']);*/ ?> </pre>

@@ -2,9 +2,16 @@ JavaTea looks for a JRE installed in JAVATEA_HOME/lib/java/.
   (Reason: while Radford's server lets scripts run system('java'),
    there was no system('javac').)
 
-To install rucs:
+To install on rucs:
+  (both rucs and php are Xeon E54xx)
 
-rsync -a /usr/local/java/ ./java/
+cd ~/dynamic_php/JavaTea/lib
+# find the real dir to copy:
+ls -l /usr/local/java  
+
+rsync -a /usr/lib/jvm/java-6-sun-1.6.0.24 .
+mv java-6-sun-1.6.0.24 java
+
 # Now, resolve a file that was a non-local link:
 rm  ./java/jre/lib/i386/jvm.cfg
 cp  /etc/java-6-sun/jvm.cfg   ./java/jre/lib/i386/jvm.cfg
