@@ -22,11 +22,12 @@ include('templates/header-inc.php');
 <h2>JavaTea</h2>
 <h4>A web-based tool for teaching beginning programmers to write good (unit) test cases.</h4>
 
+<!--
 <p>
   <font color="red">JavaTea is down for maintenance, 2011.Oct.25.</font>
   <font size="-1">(Installing a javac compatible with upgraded hardware platform.)</font>
-
 </p>
+-->
 
 <p>
      The JavaTea site is not yet ready for full use; it is currently a proof-of-concept.

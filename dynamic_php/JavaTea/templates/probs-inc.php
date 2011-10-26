@@ -441,7 +441,7 @@ END_JAVA_SEGMENT;
     }
   else {
     msg  = "Please create test-cases for this function: the inputs, and the desired result.\n";
-    msg += "  Create (just) enough test-cases so that you'll detect *any* bugs in other people's code.";
+    msg += "  Create (just) enough test-cases so that you'll detect <em>any</em> bugs in other people's code.";
     msg += "  If any buggy implementations manage to pass all your tests undetected,";
     msg += " then your tests are incomplete!";
     }

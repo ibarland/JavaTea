@@ -8,7 +8,7 @@
 
 <?php
   $probID = "p0004";
-  $functionPurpose = "Given a number and a noun, return a string with that numbe and noun, properly pluralized.\nSo given 4 and 'horse', the function should return '4 horses'.\nAssume that all nouns are made plural by ending 's' (that is, ignore nouns like 'mouse' and 'dish' and 'octopus').";
+  $functionPurpose = 'Given a number and a noun, return a string with that number and noun, properly pluralized.\nSo given 4 and "horse", the function should return "4 horses".\nAssume that all nouns are made plural by ending \'s\' (that is, ignore nouns like "mouse" and "dish" and "octopus").';
 
   $sig = Array( Array("name"=>"pluralize", "type" => "String") // [0] is the function name/return-type.
               , Array("name"=>"n", "type" => "int")           // 1st parameter
